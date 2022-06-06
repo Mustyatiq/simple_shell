@@ -3,21 +3,24 @@
  * main - prints a command
  * Return: number of characters read
  */
-int main(void)
+int main(int argc, char *argv[])
 {
 	char *command[2] = {NULL, NULL};
-	int x, i;
-	size_t length = 32;
+	int x, i, z;
+	size_t length = 1024;
 
-	printf("$ ");
-	x = getline(command, &length, stdin);
-
-	for (i = 0; command[0][i] != '\0'; i++)
+	z = argc - argc;
+	while (1)
 	{
-		if (command[0][i] == 10)
-			command[0][i] = '\0';
+		printf("$ ");
+		x = getline(command, &length, stdin);
+
+		for (i = z; command[0][i] != '\0'; i++)
+		{
+			if (command[0][i] == 10)
+				command[0][i] = '\0';
+		}
+		execArg(command, argv[0]);
 	}
-	printf("%s does this: \n", command[0]);
-	execve(command[0], command, NULL);
 	return (x);
 }
