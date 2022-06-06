@@ -13,5 +13,6 @@
 #include <limits.h>
 
 void execArg(char **command, char *name);
+int _strcmp(char *s1, char *s2);
 
 #endif

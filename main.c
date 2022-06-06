@@ -6,21 +6,27 @@
 int main(int argc, char *argv[])
 {
 	char *command[2] = {NULL, NULL};
-	int x, i, z;
+	int x, i, z, loop = 1;
 	size_t length = 1024;
 
 	z = argc - argc;
-	while (1)
+	while (loop == 1)
 	{
 		printf("$ ");
 		x = getline(command, &length, stdin);
 
-		for (i = z; command[0][i] != '\0'; i++)
+		if (x != -1)
 		{
-			if (command[0][i] == 10)
-				command[0][i] = '\0';
+			for (i = z; command[0][i] != '\0'; i++)
+			{
+				if (command[0][i] == 10)
+					command[0][i] = '\0';
+			}
+			if (_strcmp(command[0], "exit") != 0)
+				execArg(command, argv[0]);
+			else
+				loop = 0;
 		}
-		execArg(command, argv[0]);
 	}
 	return (x);
 }
