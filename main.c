@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 				loop = 0;
 		}
 		else
-			loop = 0;
+			break;
 	}
 	return (x);
 }
