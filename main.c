@@ -17,7 +17,10 @@ int main(int argc, char *argv[])
 		if (storeinput(inputstr) == 0)
 		{
 			split_space(inputstr, command);
-			execArg(command, argv[0]);
+			if (inputstr[0] != '\0')
+				execArg(command, argv[0]);
+			else
+				continue;
 		}
 		else
 			break;
