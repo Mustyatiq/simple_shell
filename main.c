@@ -22,8 +22,10 @@ int main(int argc, char *argv[])
 				if (command[0][i] == 10)
 					command[0][i] = '\0';
 			}
-			if (_strcmp(command[0], "exit") != 0)
+			if (_strcmp(command[0], "exit") != 0 && *command[0] != '\0')
 				execArg(command, argv[0]);
+			else if (*command[0] == '\0')
+				continue;
 			else
 				loop = 0;
 		}
