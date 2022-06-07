@@ -29,6 +29,8 @@ int main(int argc, char *argv[])
 			else
 				loop = 0;
 		}
+		else
+			loop = 0;
 	}
 	return (x);
 }
