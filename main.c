@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 	z = argc - argc;
 	while (loop == 1)
 	{
-		printf("$ ");
+		write(STDIN_FILENO, "$ ", 2);
 		if (storeinput(inputstr) == 0)
 		{
 			split_space(inputstr, command);
