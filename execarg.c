@@ -1,8 +1,8 @@
 #include "main.h"
 /**
  * execArg - executes commands
- * command: command to execute
- * name: argv[0]
+ * @command: command to execute
+ * @name: argv[0]
  */
 void execArg(char **command, char *name)
 {
