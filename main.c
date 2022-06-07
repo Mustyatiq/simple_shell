@@ -17,7 +17,6 @@ int main(int argc, char *argv[])
 		if (storeinput(inputstr) == 0)
 		{
 			split_space(inputstr, command);
-			printf("command is:[%s], argument is:[%s]\n", command[0], command[1]);
 			execArg(command, argv[0]);
 		}
 		else
