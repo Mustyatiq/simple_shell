@@ -16,11 +16,18 @@
 #include <limits.h>
 #include <string.h>
 
+extern char **environ;
+
 void execArg(char **command, char *name);
 int _strcmp(char *s1, char *s2);
 int storeinput(char *str);
 char *_strcpy(char *dest, char *src);
 void split_space(char *str, char **command);
 int _strlen(char *s);
+char *_strcat(char *dest, char *src);
+int cpathandexec(char **command, char *name);
+int cknowncommand(char **command);
+void _puts(char *str);
+int _putchar(char c);
 
 #endif

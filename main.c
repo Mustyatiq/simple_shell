@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 		{
 			split_space(inputstr, command);
 			if (inputstr[0] != '\0')
-				execArg(command, argv[0]);
+				cpathandexec(command, argv[0]);
 			else
 				continue;
 		}

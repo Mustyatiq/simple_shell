@@ -24,6 +24,7 @@ int storeinput(char *str)
 				buf[i] = '\0';
 		}
 		_strcpy(str, buf);
+		free(buf);
 		return (0);
 	}
 	else

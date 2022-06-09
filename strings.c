@@ -37,17 +37,36 @@ char *_strcpy(char *dest, char *src)
 	return (dest);
 }
 /**
- * _strlen - returns the length of a string
- * @s: char type string
- * Return: string length
+ * _puts - prints a string followed by a new line to stdout
+ * @str: char type pointer
  */
-int _strlen(char *s)
+void _puts(char *str)
 {
 	int i = 0;
 
-	while (s[i] != '\0')
+	for (i = 0; str[i] != '\0'; i++)
 	{
-		i++;
+		_putchar(str[i]);
 	}
-	return (i);
+	_putchar(10);
+}
+/**
+ * _strcat - concatenates two strings
+ * @dest: char type pointer
+ * @src: char type pointer
+ * Return: a pointer to the resulting string dest
+ */
+char *_strcat(char *dest, char *src)
+{
+	int i, j, k;
+
+	for (i = 0; dest[i] != '\0'; i++)
+		;
+	k = i;
+	for (i = k, j = 0; src[j] != '\0'; i++, j++)
+	{
+		dest[i] = src[j];
+		dest[i + 1] = '\0';
+	}
+	return (dest);
 }
