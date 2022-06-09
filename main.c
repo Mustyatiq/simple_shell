@@ -7,7 +7,7 @@
  */
 int main(int argc, char *argv[])
 {
-	char inputstr[MAXCOM], *command[MAXLIST];
+	char inputstr[MAXCOM],*command[MAXLIST];
 	int z, loop = 1;
 
 	z = argc - argc;

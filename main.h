@@ -2,6 +2,7 @@
 #define _MAIN_H_
 
 #define MAXCOM 1000
+#define BUFFER 1024
 #define MAXLIST 100
 
 #include <stdio.h>
@@ -29,5 +30,8 @@ int cpathandexec(char **command, char *name);
 int cknowncommand(char **command);
 void _puts(char *str);
 int _putchar(char c);
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
+void bring_line(char **lineptr, size_t *n, char *buf, size_t j);
 
 #endif
