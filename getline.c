@@ -59,7 +59,7 @@ ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 		if (i == -1 || (i == 0 && input == 0))
 		{
 			free(buf);
-			return(-1);
+			return (-1);
 		}
 		if (i == 0 && input != 0)
 		{
