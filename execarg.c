@@ -44,7 +44,7 @@ void execArg(char **command, char *name)
  */
 int cknowncommand(char **command)
 {
-	int i, check = 0, x, y;
+	int i, check = 0, x, y, n;
 	char *knowncommand[2];
 
 	x = _strcmp(command[0], "/usr/bin/env");
@@ -60,7 +60,13 @@ int cknowncommand(char **command)
 		}
 	}
 	if (check == 1)
-		exit(0);
+	{
+		if (!command[1])
+			n = 0;
+		else
+			n = _atoi(command[1]);
+		exit(n);
+	}
 	if (check == 2 || !x || !y)
 	{
 		for (i = 0; environ[i]; i++)

@@ -33,5 +33,8 @@ int _putchar(char c);
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
 void bring_line(char **lineptr, size_t *n, char *buf, size_t j);
+unsigned int is_delim(char c, char *delim);
+char *_strtok(char *str, char *delim);
+int _atoi(char *s);
 
 #endif
