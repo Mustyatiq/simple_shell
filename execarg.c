@@ -39,7 +39,7 @@ void execArg(char **command, char *name)
 }
 /**
  * cknowncommand - checks if command is known
- * command: command to check
+ * @command: command to check
  * Return: 1 if not known
  */
 int cknowncommand(char **command)
