@@ -8,7 +8,7 @@
 int storeinput(char *str)
 {
 	char *buf;
-	int x,i;
+	int x, i;
 	size_t length = 1000;
 
 	buf = malloc(length * sizeof(char));
