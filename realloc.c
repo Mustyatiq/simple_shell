@@ -1,5 +1,4 @@
 #include "main.h"
-#include <stdlib.h>
 /**
  * _realloc - eallocates a memory block using malloc and free
  * @ptr: pointer to the memory previously allocated with a call to malloc

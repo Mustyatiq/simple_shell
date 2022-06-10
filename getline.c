@@ -36,6 +36,7 @@ void put_line(char **lineptr, size_t *n, char *buf, size_t j)
  * @lineptr: where the line is stored
  * @n: size of bytes
  * @stream: where it reads from
+ * Return: no. of characters read or -1 on failure
  */
 ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 {
@@ -59,7 +60,7 @@ ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 		if (i == -1 || (i == 0 && input == 0))
 		{
 			free(buf);
-			return(-1);
+			return (-1);
 		}
 		if (i == 0 && input != 0)
 		{
@@ -76,5 +77,5 @@ ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 	retval = input;
 	if (i != 0)
 		input = 0;
-	return(retval);
+	return (retval);
 }
