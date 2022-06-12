@@ -18,6 +18,7 @@
 #include <string.h>
 
 extern char **environ;
+char **_environ;
 
 void execArg(char **command, char *name);
 int _strcmp(char *s1, char *s2);
@@ -36,5 +37,12 @@ void bring_line(char **lineptr, size_t *n, char *buf, size_t j);
 unsigned int is_delim(char c, char *delim);
 char *_strtok(char *str, char *delim);
 int _atoi(char *s);
+char *_strdup(char *str);
+char *remove_comment(char *str);
+char *copy_info(char *name, char *value);
+void set_env(char *name, char *value);
+int _csetenv(char **command);
+void set_data(void);
+char **_reallocdp(char **ptr, unsigned int old_size, unsigned int new_size);
 
 #endif

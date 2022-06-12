@@ -35,3 +35,31 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 	free(ptr);
 	return (nstr);
 }
+/**
+ * _reallocdp - realloc for double pointers
+ * @ptr: double pointer to the memory
+ * @old_size: old size
+ * @new_size: new size
+ * Return: ptr on success and NULL on failure
+ */
+char **_reallocdp(char **ptr, unsigned int old_size, unsigned int new_size)
+{
+	char **newptr;
+	unsigned int i;
+
+	if (ptr == NULL)
+		return (malloc(sizeof(char *) * new_size));
+	if (new_size == old_size)
+		return (ptr);
+
+	newptr = malloc(sizeof(char *) * new_size);
+	if (newptr == NULL)
+		return (NULL);
+
+	for (i = 0; i < old_size; i++)
+		newptr[i] = ptr[i];
+
+	free(ptr);
+
+	return (newptr);
+}

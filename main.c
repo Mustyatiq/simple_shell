@@ -8,14 +8,19 @@
 int main(int argc, char *argv[])
 {
 	char inputstr[MAXCOM], *command[MAXLIST];
-	int z, loop = 1;
+	int loop = 1;
+	(void) argc;
 
-	z = argc - argc;
+	set_data();
 	while (loop == 1)
 	{
 		write(STDIN_FILENO, "$ ", 2);
 		if (storeinput(inputstr) == 0)
 		{
+			if (remove_comment(inputstr))
+				_strcpy(inputstr, remove_comment(inputstr));
+			else
+				continue;
 			split_space(inputstr, command);
 			if (inputstr[0] != '\0')
 				cpathandexec(command, argv[0]);
@@ -25,5 +30,5 @@ int main(int argc, char *argv[])
 		else
 			break;
 	}
-	return (z);
+	return (0);
 }
