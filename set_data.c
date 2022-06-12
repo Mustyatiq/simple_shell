@@ -2,7 +2,7 @@
 /**
  * set_data - sets environ data
  */
-void set_data(void)
+void set_data(char *name)
 {
 	int i;
 
@@ -13,4 +13,6 @@ void set_data(void)
 	for (i = 0; environ[i]; i++)
 		_environ[i] = _strdup(environ[i]);
 	_environ[i] = NULL;
+
+	callmemaybe = name;
 }

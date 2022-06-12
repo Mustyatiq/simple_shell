@@ -11,16 +11,15 @@ int main(int argc, char *argv[])
 	int loop = 1;
 	(void) argc;
 
-	set_data();
+	set_data(argv[0]);
 	while (loop == 1)
 	{
 		write(STDIN_FILENO, "$ ", 2);
 		if (storeinput(inputstr) == 0)
 		{
-			if (remove_comment(inputstr))
-				_strcpy(inputstr, remove_comment(inputstr));
-			else
+			if (!remove_comment(inputstr))
 				continue;
+			_strcpy(inputstr, remove_comment(inputstr));
 			split_space(inputstr, command);
 			if (inputstr[0] != '\0')
 				cpathandexec(command, argv[0]);

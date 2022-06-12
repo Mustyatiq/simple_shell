@@ -19,6 +19,7 @@
 
 extern char **environ;
 char **_environ;
+char *callmemaybe;
 
 void execArg(char **command, char *name);
 int _strcmp(char *s1, char *s2);
@@ -42,7 +43,16 @@ char *remove_comment(char *str);
 char *copy_info(char *name, char *value);
 void set_env(char *name, char *value);
 int _csetenv(char **command);
-void set_data(void);
+void set_data(char *name);
 char **_reallocdp(char **ptr, unsigned int old_size, unsigned int new_size);
+int _unsetenv(char **command);
+void rev_string(char *s);
+int cd_exec(char **command);
+void cd_to_home(void);
+void cd_previous(void);
+void cd_to(char **command);
+void cd_dot(char **command);
+char *_getenv(const char *name, char **_environ);
+int cmp_env_name(const char *nenv, const char *name);
 
 #endif

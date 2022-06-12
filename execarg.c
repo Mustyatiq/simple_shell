@@ -45,14 +45,11 @@ void execArg(char **command, char *name)
 int cknowncommand(char **command)
 {
 	int i, check = 0, x, y, n;
-	char *knowncommand[3];
+	char *knowncommand[5] = {"exit", "env", "setenv", "unsetenv", "cd"};
 
 	x = _strcmp(command[0], "/usr/bin/env");
 	y = _strcmp(command[0], "/bin/env");
-	knowncommand[0] = "exit";
-	knowncommand[1] = "env";
-	knowncommand[2] = "setenv";
-	for (i = 0; i < 3; i++)
+	for (i = 0; i < 5; i++)
 	{
 		if (_strcmp(command[0], knowncommand[i]) == 0)
 		{
@@ -78,6 +75,16 @@ int cknowncommand(char **command)
 	{
 		_csetenv(command);
 		return(3);
+	}
+	if (check == 4)
+	{
+		_unsetenv(command);
+		return(4);
+	}
+	if (check == 5)
+	{
+		cd_exec(command);
+		return(5);
 	}
 	return (1);
 }
