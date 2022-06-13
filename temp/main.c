@@ -7,32 +7,27 @@
  */
 int main(int argc, char *argv[])
 {
-	char inputstr, *command[100];
-	int x, i, z, loop = 1;
-	size_t length = 1024;
+	char inputstr[MAXCOM], *command[MAXLIST];
+	int loop = 1;
+	(void) argc;
 
-	z = argc - argc;
+	set_data(argv[0]);
 	while (loop == 1)
 	{
-		printf("$ ");
-		x = getline(command, &length, stdin);
-
-		if (x != -1)
+		write(STDIN_FILENO, "$ ", 2);
+		if (storeinput(inputstr) == 0)
 		{
-			for (i = z; command[0][i] != '\0'; i++)
-			{
-				if (command[0][i] == 10)
-					command[0][i] = '\0';
-			}
-			if (_strcmp(command[0], "exit") != 0 && *command[0] != '\0')
-				execArg(command, argv[0]);
-			else if (*command[0] == '\0')
+			if (!remove_comment(inputstr))
 				continue;
+			_strcpy(inputstr, remove_comment(inputstr));
+			split_space(inputstr, command);
+			if (inputstr[0] != '\0')
+				cpathandexec(command, argv[0]);
 			else
-				loop = 0;
+				continue;
 		}
 		else
 			break;
 	}
-	return (x);
+	return (0);
 }

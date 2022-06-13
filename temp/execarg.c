@@ -42,7 +42,7 @@ void execArg(char **command, char *name)
  * @command: command to check
  * Return: 1 if not known
  */
-int cknowncommand(char **command, store *data)
+int cknowncommand(char **command)
 {
 	int i, check = 0, x, y, n;
 	char *knowncommand[5] = {"exit", "env", "setenv", "unsetenv", "cd"};
@@ -67,23 +67,23 @@ int cknowncommand(char **command, store *data)
 	}
 	if (check == 2 || !x || !y)
 	{
-		for (i = 0; data->_environ[i]; i++)
-			_puts(data->_environ[i]);
+		for (i = 0; _environ[i]; i++)
+			_puts(_environ[i]);
 		return (2);
 	}
 	if (check == 3)
 	{
-		_csetenv(command, data);
+		_csetenv(command);
 		return(3);
 	}
 	if (check == 4)
 	{
-		_unsetenv(command, data);
+		_unsetenv(command);
 		return(4);
 	}
 	if (check == 5)
 	{
-		cd_exec(command, data);
+		cd_exec(command);
 		return(5);
 	}
 	return (1);
@@ -95,7 +95,7 @@ int cknowncommand(char **command, store *data)
  * @name: argv[0]
  * Return: 0 on success and 1 on failure
  */
-int cpathandexec(char **command, store *data)
+int cpathandexec(char **command, char *name)
 {
 	struct stat st;
 	int x, y, z;
@@ -104,15 +104,15 @@ int cpathandexec(char **command, store *data)
 	y = _strcmp(command[0], "/usr/bin/env");
 	z = _strcmp(command[0], "/bin/env");
 	if (stat(command[0], &st) == 0 && y && z)
-		execArg(command, data->callmemaybe);
+		execArg(command, name);
 	else
 	{
-		x = cknowncommand(command, data);
+		x = cknowncommand(command);
 		if (x == 1)
 		{
 			_strcat(hold, command[0]);
 			command[0] = hold;
-			execArg(command, data->callmemaybe);
+			execArg(command, name);
 		}
 	}
 	return (0);

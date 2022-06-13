@@ -4,7 +4,7 @@
  * @command: comand passed
  * Return: 1 on success
  */
-int cd_exec(char **command, store *data)
+int cd_exec(char **command)
 {
 	char *hold;
 	int i, j, k;
@@ -17,12 +17,12 @@ int cd_exec(char **command, store *data)
 		k = _strcmp("--", hold);
 	}
 	if (!hold || !i || !j || !k)
-		cd_to_home(data);
+		cd_to_home();
 	else if (_strcmp("-", hold) == 0)
-		cd_previous(data);
+		cd_previous();
 	else if(_strcmp(".", hold) == 0 || _strcmp("..", hold) == 0)
-		cd_dot(command, data);
+		cd_dot(command);
 	else
-		cd_to(command, data);
+		cd_to(command);
 	return (1);
 }
