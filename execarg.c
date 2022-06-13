@@ -99,7 +99,7 @@ int cpathandexec(char **command, store *data)
 {
 	struct stat st;
 	int x, y, z;
-	char hold[1024] = "/usr/bin/";
+	char hold[PATH_MAX] = "/usr/bin/";
 
 	y = _strcmp(command[0], "/usr/bin/env");
 	z = _strcmp(command[0], "/bin/env");
