@@ -2,6 +2,7 @@
 /**
  * cd_exec - changes working directory
  * @command: comand passed
+ * @data: struct store
  * Return: 1 on success
  */
 int cd_exec(char **command, store *data)
@@ -20,7 +21,7 @@ int cd_exec(char **command, store *data)
 		cd_to_home(command, data);
 	else if (_strcmp("-", hold) == 0)
 		cd_previous(data);
-	else if(_strcmp(".", hold) == 0 || _strcmp("..", hold) == 0)
+	else if (_strcmp(".", hold) == 0 || _strcmp("..", hold) == 0)
 		cd_dot(command, data);
 	else
 		cd_to(command, data);

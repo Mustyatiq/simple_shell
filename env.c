@@ -24,6 +24,7 @@ char *copy_info(char *name, char *value)
 /**
  * set_env - sets or modifies an environment variable
  * @name: variable name
+ * @data: struct dat
  * @value: variable value
  */
 void set_env(char *name, char *value, store *data)
@@ -50,7 +51,8 @@ void set_env(char *name, char *value, store *data)
 }
 /**
  * _csetenv - checks if setenv is correctly called
- * command - command passed
+ * @command: command passed
+ * @data: struct store
  * Return: 1 on success
  */
 int _csetenv(char **command, store *data)
@@ -64,6 +66,7 @@ int _csetenv(char **command, store *data)
 /**
  * _unsetenv - deletes an environment variable
  * @command: command passed
+ * @data: struct store
  * Return: 1 on success
  */
 int _unsetenv(char **command, store *data)

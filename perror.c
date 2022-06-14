@@ -3,6 +3,7 @@
  * _perror - prints error line
  * @command: command passed
  * @value: error value
+ * @data: struct store
  * Return: error value
  */
 int _perror(char **command, int value, store *data)
@@ -15,7 +16,7 @@ int _perror(char **command, int value, store *data)
 		error = error_env(command, data);
 		break;
 	case 2:
-		if(_strcmp("exit", command[0]) == 0)
+		if (_strcmp("exit", command[0]) == 0)
 			error = error_exit_shell(command, data);
 		else if (_strcmp("cd", command[0]) == 0)
 			error = error_get_cd(command, data);

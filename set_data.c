@@ -1,6 +1,8 @@
 #include "main.h"
 /**
  * set_data - sets environ data
+ * @data: struct store
+ * @name: argv[0]
  */
 void set_data(store *data, char *name)
 {

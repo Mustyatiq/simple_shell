@@ -2,6 +2,7 @@
 /**
  * cd_dot - changes to parent directory
  * @command: comand passed
+ * @data: struct data
  */
 void cd_dot(char **command, store *data)
 {
@@ -47,6 +48,7 @@ void cd_dot(char **command, store *data)
 /**
  * cd_to - changes to a given directory
  * @command: command passed
+ * @data: struct store
  */
 void cd_to(char **command, store *data)
 {
@@ -74,7 +76,7 @@ void cd_to(char **command, store *data)
 }
 /**
  * cd_previous - changes to previous directory
- * @command: command passed
+ * @data: struct data
  */
 void cd_previous(store *data)
 {
@@ -109,6 +111,7 @@ void cd_previous(store *data)
 /**
  * cd_to_home - changes to home directory
  * @command: command passed
+ * @data: struct store
  */
 void cd_to_home(char **command, store *data)
 {

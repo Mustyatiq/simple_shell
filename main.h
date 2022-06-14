@@ -63,7 +63,7 @@ void cd_dot(char **command, store *data);
 void ctrlchandler(int signum);
 int exit_num(char **command, store *data);
 int _perror(char **command, int value, store *data);
-char *_strcat_cd(store *data, char **command, char *ms, char *error, char *ver);
+char *_strcat_cd(store *data, char **command, char *m, char *error, char *ver);
 char *rpath(char *src);
 char *error_get_cd(char **command, store *data);
 char *error_exit_shell(char **command, store *data);

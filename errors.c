@@ -33,11 +33,12 @@ char *_strcat_cd(store *data, char **command, char *ms, char *error, char *ver)
 	}
 	_strcat(error, "\n");
 	_strcat(error, "\0");
-	return(error);
+	return (error);
 }
 /**
  * error_get_cd - error mesage for cd
- * @comad: command passed
+ * @command: command passed
+ * @data: struct store
  * Return: message
  */
 char *error_get_cd(char **command, store *data)
@@ -64,7 +65,7 @@ char *error_get_cd(char **command, store *data)
 		return (NULL);
 	error = _strcat_cd(data, command, msg, error, ver);
 
-	return(error);
+	return (error);
 }
 /**
  * error_exit_shell - error message for exit

@@ -2,6 +2,7 @@
 /**
  * exit_num - returns status
  * @command: command passed
+ * @data: struct store
  * Return: status
  */
 int exit_num(char **command, store *data)
@@ -22,5 +23,5 @@ int exit_num(char **command, store *data)
 		}
 	}
 
-	return(n);
+	return (n);
 }

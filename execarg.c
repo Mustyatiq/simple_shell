@@ -2,7 +2,7 @@
 /**
  * execArg - executes commands
  * @command: command to execute
- * @name: argv[0]
+ * @data: struct store
  */
 void execArg(char **command, store *data)
 {
@@ -43,6 +43,7 @@ void execArg(char **command, store *data)
 /**
  * cknowncommand - checks if command is known
  * @command: command to check
+ * @data: struct store
  * Return: 1 if not known
  */
 int cknowncommand(char **command, store *data)
@@ -73,17 +74,17 @@ int cknowncommand(char **command, store *data)
 	if (check == 3)
 	{
 		_csetenv(command, data);
-		return(3);
+		return (3);
 	}
 	if (check == 4)
 	{
 		_unsetenv(command, data);
-		return(4);
+		return (4);
 	}
 	if (check == 5)
 	{
 		cd_exec(command, data);
-		return(5);
+		return (5);
 	}
 	return (1);
 }
@@ -91,7 +92,7 @@ int cknowncommand(char **command, store *data)
  * cpathandexec - checks if PATH was written in command
  * and edits if necessary
  * @command: command to execute
- * @name: argv[0]
+ * @data: struct store
  * Return: 0 on success and 1 on failure
  */
 int cpathandexec(char **command, store *data)
