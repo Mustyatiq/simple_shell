@@ -17,4 +17,5 @@ void set_data(store *data, char *name)
 	data->_environ[i] = NULL;
 
 	data->callmemaybe = name;
+	data->counter = 1;
 }

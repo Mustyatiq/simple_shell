@@ -27,6 +27,7 @@ typedef struct store
 {
 	char **_environ;
 	char *callmemaybe;
+	int counter;
 } store;
 
 void execArg(char **command, store *data);
