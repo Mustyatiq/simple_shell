@@ -81,3 +81,24 @@ int _isdigit(const char *str)
 	}
 		return (1);
 }
+/**
+ * rpath - copies src to dest
+ * @src: char type pointer
+ * Return: src
+ */
+char *rpath(char *src)
+{
+	int i, j;
+	char *hold;
+
+	hold = malloc((sizeof(char) * (_strlen(src) - 9)) + 1);
+	for (i = 9, j = 0; src[i] != '\0'; i++)
+	{
+		hold[j] = src[i];
+		j++;
+	}
+	hold[j] = '\0';
+	src = _strdup(hold);
+	free(hold);
+	return (src);
+}

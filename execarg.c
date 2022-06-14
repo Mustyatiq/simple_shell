@@ -4,7 +4,7 @@
  * @command: command to execute
  * @name: argv[0]
  */
-void execArg(char **command, char *name)
+void execArg(char **command, store *data)
 {
 	struct stat st;
 	pid_t pid;
@@ -20,7 +20,7 @@ void execArg(char **command, char *name)
 		else if (pid == 0)
 		{
 			if (execve(command[0], command, NULL) == -1)
-				perror(name);
+				perror(data->callmemaybe);
 			exit(0);
 		}
 		else
@@ -32,7 +32,10 @@ void execArg(char **command, char *name)
 	else
 	{
 		if (execve(command[0], command, NULL) == -1)
-			perror(name);
+		{
+			command[0] = rpath(command[0]);
+			_perror(command, 127, data);
+		}
 		return;
 	}
 
@@ -100,7 +103,7 @@ int cpathandexec(char **command, store *data)
 	y = _strcmp(command[0], "/usr/bin/env");
 	z = _strcmp(command[0], "/bin/env");
 	if (stat(command[0], &st) == 0 && y && z)
-		execArg(command, data->callmemaybe);
+		execArg(command, data);
 	else
 	{
 		x = cknowncommand(command, data);
@@ -108,7 +111,7 @@ int cpathandexec(char **command, store *data)
 		{
 			_strcat(hold, command[0]);
 			command[0] = hold;
-			execArg(command, data->callmemaybe);
+			execArg(command, data);
 		}
 	}
 	return (0);

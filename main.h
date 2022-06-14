@@ -29,7 +29,7 @@ typedef struct store
 	char *callmemaybe;
 } store;
 
-void execArg(char **command, char *name);
+void execArg(char **command, store *data);
 int _strcmp(char *s1, char *s2);
 int storeinput(char *str);
 char *_strcpy(char *dest, char *src);
@@ -63,11 +63,13 @@ void cd_dot(char **command, store *data);
 void ctrlchandler(int signum);
 int exit_num(char **command, store *data);
 int _perror(char **command, int value, store *data);
-char *_strcat_cd(store *data, char **command, char *msg, char *error, char *ver);
+char *_strcat_cd(store *data, char **command, char *ms, char *error, char *ver);
+char *rpath(char *src);
 char *error_get_cd(char **command, store *data);
 char *error_exit_shell(char **command, store *data);
 char *error_env(char **command, store *data);
 int _isdigit(const char *str);
+char *error_not_found(char **command, store *data);
 char *_getenv(const char *name, char **_environ);
 int cmp_env_name(const char *nenv, const char *name);
 

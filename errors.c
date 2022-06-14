@@ -3,12 +3,12 @@
  * _strcat_cd - strcat for cd error
  * @data: data struct
  * @command: command passed
- * @msg: message to print
+ * @ms: message to print
  * @error: error message
  * @ver: counter lines
  * Return: error message
  */
-char *_strcat_cd(store *data, char **command, char *msg, char *error, char *ver)
+char *_strcat_cd(store *data, char **command, char *ms, char *error, char *ver)
 {
 	char *flag;
 
@@ -17,7 +17,7 @@ char *_strcat_cd(store *data, char **command, char *msg, char *error, char *ver)
 	_strcat(error, ver);
 	_strcat(error, ": ");
 	_strcat(error, command[0]);
-	_strcat(error, msg);
+	_strcat(error, ms);
 	if (command[1][0] == '-')
 	{
 		flag = malloc(sizeof(char) * 3);
@@ -124,5 +124,34 @@ char *error_env(char **command, store *data)
 	_strcat(error, msg);
 	_strcat(error, "\0");
 
+	return (error);
+}
+/**
+ * error_not_found - error message when command is not found
+ * @command: command passed
+ * @data: struct data
+ * Return: error message
+ */
+char *error_not_found(char **command, store *data)
+{
+	int len;
+	char *error;
+	char *ver = "1";
+
+	len = _strlen(data->callmemaybe) + _strlen(ver);
+	len += _strlen(command[0]) + 16;
+	error = malloc(sizeof(char) * (len + 1));
+	if (!error)
+	{
+		free(error);
+		return (NULL);
+	}
+	_strcpy(error, data->callmemaybe);
+	_strcat(error, ": ");
+	_strcat(error, ver);
+	_strcat(error, ": ");
+	_strcat(error, command[0]);
+	_strcat(error, ": not found\n");
+	_strcat(error, "\0");
 	return (error);
 }

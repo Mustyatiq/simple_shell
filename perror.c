@@ -20,6 +20,9 @@ int _perror(char **command, int value, store *data)
 		else if (_strcmp("cd", command[0]) == 0)
 			error = error_get_cd(command, data);
 		break;
+	case 127:
+		error = error_not_found(command, data);
+		break;
 	}
 
 	if (error)
