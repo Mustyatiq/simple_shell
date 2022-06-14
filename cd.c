@@ -17,7 +17,7 @@ int cd_exec(char **command, store *data)
 		k = _strcmp("--", hold);
 	}
 	if (!hold || !i || !j || !k)
-		cd_to_home(data);
+		cd_to_home(command, data);
 	else if (_strcmp("-", hold) == 0)
 		cd_previous(data);
 	else if(_strcmp(".", hold) == 0 || _strcmp("..", hold) == 0)

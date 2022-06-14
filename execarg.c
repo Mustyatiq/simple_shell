@@ -52,17 +52,13 @@ int cknowncommand(char **command, store *data)
 	for (i = 0; i < 5; i++)
 	{
 		if (_strcmp(command[0], knowncommand[i]) == 0)
-		{
 			check = i + 1;
+		if (check)
 			break;
-		}
 	}
 	if (check == 1)
 	{
-		if (!command[1])
-			n = 0;
-		else
-			n = _atoi(command[1]);
+		n = exit_num(command, data);
 		exit(n);
 	}
 	if (check == 2 || !x || !y)

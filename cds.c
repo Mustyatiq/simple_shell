@@ -58,7 +58,7 @@ void cd_to(char **command, store *data)
 	hold = command[1];
 	if (chdir(hold) == -1)
 	{
-		perror(data->callmemaybe);
+		_perror(command, 2, data);
 		return;
 	}
 	cp_pwd = _strdup(pwd);
@@ -110,7 +110,7 @@ void cd_previous(store *data)
  * cd_to_home - changes to home directory
  * @command: command passed
  */
-void cd_to_home(store *data)
+void cd_to_home(char **command, store *data)
 {
 	char *p_pwd, *home;
 	char pwd[PATH_MAX];
@@ -127,7 +127,7 @@ void cd_to_home(store *data)
 	}
 	if (chdir(home) == -1)
 	{
-		perror(data->callmemaybe);
+		_perror(command, 2, data);
 		free(p_pwd);
 		return;
 	}

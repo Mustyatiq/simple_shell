@@ -56,7 +56,7 @@ void set_env(char *name, char *value, store *data)
 int _csetenv(char **command, store *data)
 {
 	if (command[1] == NULL || command == NULL)
-		write(STDERR_FILENO, "Failed\n", 7);
+		_perror(command, -1, data);
 	else
 		set_env(command[1], command[2], data);
 	return (1);
@@ -74,7 +74,7 @@ int _unsetenv(char **command, store *data)
 
 	if (command[1] == NULL)
 	{
-		write(STDERR_FILENO, "Failed\n", 7);
+		_perror(command, -1, data);
 		return (1);
 	}
 	k = -5;
@@ -88,7 +88,7 @@ int _unsetenv(char **command, store *data)
 	}
 	if (k == -5)
 	{
-		write(STDERR_FILENO, "Failed\n", 7);
+		_perror(command, -1, data);
 		return (1);
 	}
 	re_env = malloc(sizeof(char *) * i);

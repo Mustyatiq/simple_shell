@@ -65,3 +65,19 @@ void rev_string(char *s)
 		l++;
 	}
 }
+/**
+ * _isdigit - checks if character is a digit
+ * @str: string to be checked
+ * Return: 1 if it is a digit, 0 otherwise
+ */
+int _isdigit(const char *str)
+{
+	unsigned int i = 0;
+
+	for (i = 0; str[i]; i++)
+	{
+		if (str[i] < 48 || str[i] > 57)
+			return (0);
+	}
+		return (1);
+}
