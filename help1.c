@@ -1,106 +1,80 @@
 #include "main.h"
 
 /**
- * helpFunc - retrieves instruction on how to use builtin
- * @build: input build
- * Return: Always 1
+ * aux_help_env - Help information for the builtin env
+ * Return: no return
  */
-int helpFunc(config *build)
+void aux_help_env(void)
 {
-	type_b help_arr[] = {
-		{"exit", helpExit},
-		{"env", helpEnv},
-		{"history", helpHistory},
-		{"alias", helpAlias},
-		{"cd", helpCd},
-		{"setenv", helpSetenv},
-		{"unsetenv", helpUnsetenv},
-		{"help", helpHelp},
-		{NULL, NULL}
-	};
-	register int i = 0, j = 1, argCount = countArgs(build->args);
-	_Bool foundCommand = false;
+	char *help = "env: env [option] [name=value] [command [args]]\n\t";
 
-	if (argCount == 1)
-		return (displayHelpMenu());
-	while (j < argCount)
-	{
-		i = 0;
-		while (help_arr[i].command)
-		{
-			if (_strcmp(build->args[j], help_arr[i].command) == 0)
-			{
-				foundCommand = true;
-				help_arr[i].func(build);
-				break;
-			}
-			i++;
-		}
-		j++;
-	}
-	if (foundCommand == false)
-	{
-		errno = ENOBUILTIN;
-		errorHandler(build);
-	}
-	return (1);
+	write(STDOUT_FILENO, help, _strlen(help));
+	help = "Print the enviroment of the shell.\n";
+	write(STDOUT_FILENO, help, _strlen(help));
+
 }
-
 /**
- * displayHelpMenu - displays available help options
- * Return: Always 1
+ * aux_help_setenv - Help information for the builtin setenv
+ * Return: no return
  */
-int displayHelpMenu(void)
+void aux_help_setenv(void)
 {
-	char str[81] = "Type help [built-in]\n\nIncluded built-ins:";
-	char *str2 = "\n\n\texit\n\tenv\n\tcd\n\tsetenv\n\tunsetenv\n\thelp\n";
 
-	_strcat(str, str2);
-	write(STDOUT_FILENO, str, _strlen(str));
-	return (1);
+	char *help = "setenv: setenv (const char *name, const char *value,";
+
+	write(STDOUT_FILENO, help, _strlen(help));
+	help = "int replace)\n\t";
+	write(STDOUT_FILENO, help, _strlen(help));
+	help = "Add a new definition to the environment\n";
+	write(STDOUT_FILENO, help, _strlen(help));
+}
+/**
+ * aux_help_unsetenv - Help information for the builtin unsetenv
+ * Return: no return
+ */
+void aux_help_unsetenv(void)
+{
+	char *help = "unsetenv: unsetenv (const char *name)\n\t";
+
+	write(STDOUT_FILENO, help, _strlen(help));
+	help = "Remove an entry completely from the environment\n";
+	write(STDOUT_FILENO, help, _strlen(help));
 }
 
 
 /**
- * helpExit - instructions on how to exit
- * @build: input build
- * Return: Always 1
+ * aux_help_general - Entry point for help information for the help builtin
+ * Return: no return
  */
-int helpExit(config *build)
+void aux_help_general(void)
 {
-	char str[82] = "exit: exit [n]\n\tExit the shell.\n\n\t";
-	char *str2 = "Exit with a status of n, or if n is omitted, 0.\n";
+	char *help = "^-^ bash, version 1.0(1)-release\n";
 
-	(void)build;
-	_strcat(str, str2);
-	write(STDOUT_FILENO, str, _strlen(str));
-	return (1);
+	write(STDOUT_FILENO, help, _strlen(help));
+	help = "These commands are defined internally.Type 'help' to see the list";
+	write(STDOUT_FILENO, help, _strlen(help));
+	help = "Type 'help name' to find out more about the function 'name'.\n\n ";
+	write(STDOUT_FILENO, help, _strlen(help));
+	help = " alias: alias [name=['string']]\n cd: cd [-L|[-P [-e]] [-@]] ";
+	write(STDOUT_FILENO, help, _strlen(help));
+	help = "[dir]\nexit: exit [n]\n  env: env [option] [name=value] [command ";
+	write(STDOUT_FILENO, help, _strlen(help));
+	help = "[args]]\n  setenv: setenv [variable] [value]\n  unsetenv: ";
+	write(STDOUT_FILENO, help, _strlen(help));
+	help = "unsetenv [variable]\n";
+	write(STDOUT_FILENO, help, _strlen(help));
 }
-
 /**
- * helpEnv - instructions on how to exit
- * @build: input build
- * Return: Always 1
+ * aux_help_exit - Help information fot the builint exit
+ * Return: no return
  */
-int helpEnv(config *build)
+void aux_help_exit(void)
 {
-	char str[] = "env: env\n\tPrint the environment.\n";
+	char *help = "exit: exit [n]\n Exit shell.\n";
 
-	(void)build;
-	write(STDOUT_FILENO, str, _strlen(str));
-	return (1);
-}
-
-/**
- * helpHistory - instructions on how to exit
- * @build: input build
- * Return: Always 1
- */
-int helpHistory(config *build)
-{
-	char str[] = "history: history\n\tNot supported in this version.\n";
-
-	(void)build;
-	write(STDOUT_FILENO, str, _strlen(str));
-	return (1);
+	write(STDOUT_FILENO, help, _strlen(help));
+	help = "Exits the shell with a status of N. If N is ommited, the exit";
+	write(STDOUT_FILENO, help, _strlen(help));
+	help = "statusis that of the last command executed\n";
+	write(STDOUT_FILENO, help, _strlen(help));
 }
