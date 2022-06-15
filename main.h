@@ -1,82 +1,187 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
-#define MAXCOM 1000
-#define BUFFER 1024
-#define MAXLIST 100
-
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include <sys/wait.h>
 #include <sys/stat.h>
-#include <errno.h>
 #include <fcntl.h>
+#include <errno.h>
 #include <signal.h>
 #include <limits.h>
-#include <string.h>
+
+/* ERRORS */
+#define BUFSIZE 256
+#define ENOSTRING 1106
+#define EILLEGAL 227
+#define EWSIZE 410
+#define ENOBUILTIN 415
+#define EBADCD 726
 
 extern char **environ;
-/**
- * struct store - contains some set data
- * @_environ: environment variables
- * @callmemaybe: argv[0]
- * @counter: line counter
- * @_return: return value
- */
-typedef struct store
-{
-	char **_environ;
-	char *callmemaybe;
-	int counter;
-	int _return;
-} store;
 
-void execArg(char **command, store *data);
-int _strcmp(char *s1, char *s2);
-void free_environ(store *data);
-int storeinput(char *str);
-char *_strcpy(char *dest, char *src);
-char *_itoa(int n);
-void split_space(char *str, char **command);
+/**
+ * struct linkedList - linked list data structure
+ * @string: environ variable path name
+ * @next: pointer to next node
+ */
+typedef struct linkedList
+{
+	char *string;
+	struct linkedList *next;
+} linked_l;
+
+/**
+ * struct configurations - configuration of build settings
+ * @env: linked list of local env variables
+ * @envList: array of env variables to put into execve
+ * @args: array of argument strings
+ * @buffer: string buffer of user input
+ * @path: array of $PATH locations
+ * @fullPath: string of path with correct prepended $PATH
+ * @shellName: name of shell (argv[0])
+ * @lineCounter: counter of lines users have entered
+ * @errorStatus: error status of last child process
+ */
+typedef struct configurations
+{
+	linked_l *env;
+	char **envList;
+	char **args;
+	char *buffer;
+	char *path;
+	char *fullPath;
+	char *shellName;
+	unsigned int lineCounter;
+	int errorStatus;
+} config;
+
+/**
+ * struct builtInCommands - commands and functions associated with it
+ * @command: input command
+ * @func: output function
+ */
+typedef struct builtInCommands
+{
+	char *command;
+	int (*func)(config *build);
+} type_b;
+
+/* main */
+config *configInit(config *build);
+
+/* built_ins */
+_Bool findBuiltIns(config *build);
+int exitFunc(config *build);
+int historyFunc(config *build);
+int aliasFunc(config *build);
+
+/* cd */
+int cdFunc(config *);
+_Bool cdToHome(config *build);
+_Bool cdToPrevious(config *build);
+_Bool cdToCustom(config *build);
+_Bool updateEnviron(config *build);
+
+/* cd2 */
+int updateOld(config *build);
+_Bool updateCur(config *build, int index);
+
+/* env */
+int envFunc(config *build);
+int setenvFunc(config *build);
+int unsetenvFunc(config *build);
+int _isalpha(int c);
+
+/* help */
+int helpFunc(config *build);
+int displayHelpMenu(void);
+int helpExit(config *build);
+int helpEnv(config *build);
+int helpHistory(config *build);
+
+/* help2 */
+int helpAlias(config *build);
+int helpCd(config *biuld);
+int helpSetenv(config *build);
+int helpUnsetenv(config *build);
+int helpHelp(config *build);
+
+/* built_in_helpers*/
+int countArgs(char **args);
+int _atoi(char *s);
+
+/* shell */
+void shell(config *build);
+void checkAndGetLine(config *build);
+void forkAndExecute(config *build);
+void stripComments(char *str);
+void convertLLtoArr(config *build);
+
+/* _getenv */
+char *_getenv(char *input, char **environ);
+
+/* error_handler */
+void errorHandler(config *build);
+unsigned int countDigits(int num);
+char *itoa(unsigned int num);
+char *getErrorMessage();
+
+/* shell_helpers */
+void insertNullByte(char *str, unsigned int index);
+void displayPrompt(void);
+void displayNewLine(void);
+void sigintHandler(int sigint);
+
+/* check_path */
+_Bool checkPath(config *);
+_Bool checkEdgeCases(config *build);
+
+/* split_string */
+_Bool splitString(config *build);
+unsigned int countWords(char *s);
+_Bool isSpace(char c);
+
+/* string_helpers1 */
 int _strlen(char *s);
 char *_strcat(char *dest, char *src);
-int cpathandexec(char **command, store *data);
-int cknowncommand(char **command, store *data);
-void _puts(char *str);
-int _putchar(char c);
-void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
-ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
-void bring_line(char **lineptr, size_t *n, char *buf, size_t j);
-unsigned int is_delim(char c, char *delim);
-char *_strtok(char *str, char *delim);
-int _atoi(char *s);
+int _strcmp(char *s1, char *s2);
 char *_strdup(char *str);
-char *remove_comment(char *str);
-char *copy_info(char *name, char *value);
-void set_env(char *name, char *value, store *data);
-int _csetenv(char **command, store *data);
-void set_data(store *data, char *name);
-char **_reallocdp(char **ptr, unsigned int old_size, unsigned int new_size);
-int _unsetenv(char **command, store *data);
-void rev_string(char *s);
-int cd_exec(char **command, store *data);
-void cd_to_home(char **command, store *data);
-void cd_previous(store *data);
-void cd_to(char **command, store *data);
-void cd_dot(char **command, store *data);
-void ctrlchandler(int signum);
-int exit_num(char **command, store *data);
-int _perror(char **command, int value, store *data);
-char *_strcat_cd(store *data, char **command, char *m, char *error, char *ver);
-char *rpath(char *src);
-char *error_get_cd(char **command, store *data);
-char *error_exit_shell(char **command, store *data);
-char *error_env(char **command, store *data);
-int _isdigit(const char *str);
-char *error_not_found(char **command, store *data);
-char *_getenv(const char *name, char **_environ);
-int cmp_env_name(const char *nenv, const char *name);
+char *_strcpy(char *dest, char *src);
+
+/* string_helpers2 */
+char *_strtok(char *str, char *delim);
+int _strcspn(char *string, char *chars);
+char *_strchr(char *s, char c);
+
+/* llfuncs1 */
+linked_l *addNode(linked_l **head, char *str);
+linked_l *addNodeEnd(linked_l **head, char *str);
+size_t printList(const linked_l *h);
+int searchNode(linked_l *head, char *str);
+size_t list_len(linked_l *h);
+
+/* llfuncs2 */
+int deleteNodeAtIndex(linked_l **head, unsigned int index);
+linked_l *generateLinkedList(char **array);
+linked_l *addNodeAtIndex(linked_l **head, int index, char *str);
+char *getNodeAtIndex(linked_l *head, unsigned int index);
+
+/* welcome */
+void welcome_screen_1(void);
+void welcome_screen_2(void);
+
+/* _realloc */
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+char *_memcpy(char *dest, char *src, unsigned int n);
+
+/* free */
+void freeMembers(config *build);
+void freeArgsAndBuffer(config *build);
+void freeArgs(char **args);
+void freeList(linked_l *head);
 
 #endif
