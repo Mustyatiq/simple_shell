@@ -1,94 +1,80 @@
 #include "main.h"
 
 /**
- * envFunc - prints the environment
- * @build: input build
- * Return: Always 1
+ * cmp_env_name - compares env variables names
+ * with the name passed.
+ * @nenv: name of the environment variable
+ * @name: name passed
+ *
+ * Return: 0 if are not equal. Another value if they are.
  */
-int envFunc(config *build)
+int cmp_env_name(const char *nenv, const char *name)
 {
-	printList(build->env);
-	return (1);
-}
+	int i;
 
-/**
- * setenvFunc - adds env variable if it does not exist;
- * modify env variable if it does
- * @build: input build
- * Return: Always 1
- */
-int setenvFunc(config *build)
-{
-	register int index, len;
-	static char buffer[BUFSIZE];
-
-	if (countArgs(build->args) != 3)
+	for (i = 0; nenv[i] != '='; i++)
 	{
-		errno = EWSIZE;
-		errorHandler(build);
-		return (1);
-	}
-	len = _strlen(build->args[1]) + _strlen(build->args[2]) + 2;
-	_strcat(buffer, build->args[1]);
-	_strcat(buffer, "=");
-	_strcat(buffer, build->args[2]);
-	insertNullByte(buffer, len - 1);
-	index = searchNode(build->env, build->args[1]);
-	if (index == -1)
-	{
-		addNodeEnd(&build->env, buffer);
-		insertNullByte(buffer, 0);
-		return (1);
-	}
-	deleteNodeAtIndex(&build->env, index);
-	addNodeAtIndex(&build->env, index, buffer);
-	insertNullByte(buffer, 0);
-	return (1);
-}
-
-/**
- * unsetenvFunc - deletes env variable if exists;
- * will only accept valid variables names
- * @build: input build
- * Return: Always 1
- */
-int unsetenvFunc(config *build)
-{
-	register int foundVar, i = 1;
-	_Bool foundMatch = false;
-
-	while (build->args[i])
-	{
-		if (_isalpha(build->args[i][0]) || build->args[i][0] == '_')
+		if (nenv[i] != name[i])
 		{
-			foundVar = searchNode(build->env, build->args[i]);
-			if (foundVar > -1)
-			{
-				deleteNodeAtIndex(&build->env, foundVar);
-				foundMatch = true;
-			}
+			return (0);
 		}
-		i++;
 	}
-	if (foundMatch == false)
-	{
-		errno = ENOSTRING;
-		errorHandler(build);
-	}
-	return (1);
+
+	return (i + 1);
 }
 
 /**
- * _isalpha - checks if c is an alphabetic character
- * @c: potential alphabetical value
- * Return: if c is a letter, returns 1. Otherwise, return 0.
+ * _getenv - get an environment variable
+ * @name: name of the environment variable
+ * @_environ: environment variable
+ *
+ * Return: value of the environment variable if is found.
+ * In other case, returns NULL.
  */
-int _isalpha(int c)
+char *_getenv(const char *name, char **_environ)
 {
-	if (c > 64 && c < 91)
-		return (1);
-	else if (c > 96 && c < 123)
-		return (1);
-	else
-		return (0);
+	char *ptr_env;
+	int i, mov;
+
+	/* Initialize ptr_env value */
+	ptr_env = NULL;
+	mov = 0;
+	/* Compare all environment variables */
+	/* environ is declared in the header file */
+	for (i = 0; _environ[i]; i++)
+	{
+		/* If name and env are equal */
+		mov = cmp_env_name(_environ[i], name);
+		if (mov)
+		{
+			ptr_env = _environ[i];
+			break;
+		}
+	}
+
+	return (ptr_env + mov);
+}
+
+/**
+ * _env - prints the evironment variables
+ *
+ * @datash: data relevant.
+ * Return: 1 on success.
+ */
+int _env(data_shell *datash)
+{
+	int i, j;
+
+	for (i = 0; datash->_environ[i]; i++)
+	{
+
+		for (j = 0; datash->_environ[i][j]; j++)
+			;
+
+		write(STDOUT_FILENO, datash->_environ[i], j);
+		write(STDOUT_FILENO, "\n", 1);
+	}
+	datash->status = 0;
+
+	return (1);
 }
