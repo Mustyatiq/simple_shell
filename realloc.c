@@ -1,65 +1,57 @@
 #include "main.h"
+
 /**
- * _realloc - eallocates a memory block using malloc and free
- * @ptr: pointer to the memory previously allocated with a call to malloc
- * @old_size: previous memory size
- * @new_size: new memory size
- * Return: pointer to the  new memory
- * if new_size = 0, NULL
+ * _realloc - reallocates a memory block using malloc and free
+ * @ptr: input pointer
+ * @old_size: size of old ptr
+ * @new_size: size of new ptr
+ * Return: reallocated ptr
  */
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 {
-	char *hstr = (char *)ptr;
-	char *nstr;
-	unsigned int i;
+	void *res = NULL;
 
-	if (new_size == 0 && ptr != NULL)
+	if (new_size == old_size)
+		return (ptr);
+	if (!ptr)
+	{
+		free(ptr);
+		res = malloc(new_size);
+		if (!res)
+		{
+			perror("Malloc failed");
+			exit(errno);
+		}
+		return (res);
+	}
+	if (!new_size && ptr)
 	{
 		free(ptr);
 		return (NULL);
 	}
-	if (new_size > old_size || ptr == NULL)
+	res = malloc(new_size);
+	if (!res)
 	{
-		nstr = malloc(new_size);
-		if (nstr == NULL)
-			return (NULL);
-		if (ptr != NULL)
-		{
-			for (i = 0; i < old_size; i++)
-				nstr[i] = hstr[i];
-		}
-
+		perror("Malloc failed");
+		exit(errno);
 	}
-	else if (new_size == old_size)
-		return (ptr);
+	_memcpy(res, ptr, old_size);
 	free(ptr);
-	return (nstr);
+	return (res);
 }
+
 /**
- * _reallocdp - realloc for double pointers
- * @ptr: double pointer to the memory
- * @old_size: old size
- * @new_size: new size
- * Return: ptr on success and NULL on failure
+ * _memcpy - copies memory area
+ * @dest: destination string
+ * @src: source string
+ * @n: number of bytes to be copied
+ * Return: pointer to dest
  */
-char **_reallocdp(char **ptr, unsigned int old_size, unsigned int new_size)
+char *_memcpy(char *dest, char *src, unsigned int n)
 {
-	char **newptr;
-	unsigned int i;
+	char *ptr = dest;
 
-	if (ptr == NULL)
-		return (malloc(sizeof(char *) * new_size));
-	if (new_size == old_size)
-		return (ptr);
-
-	newptr = malloc(sizeof(char *) * new_size);
-	if (newptr == NULL)
-		return (NULL);
-
-	for (i = 0; i < old_size; i++)
-		newptr[i] = ptr[i];
-
-	free(ptr);
-
-	return (newptr);
+	while (n--)
+		*dest++ = *src++;
+	return (ptr);
 }
