@@ -1,93 +1,106 @@
 #include "main.h"
 
 /**
- * _strlen - returns the length of a string
- * @s: string s
- * Return: length of string
+ * _strcat - concatenate two strings
+ * @dest: char pointer the dest of the copied str
+ * @src: const char pointer the source of str
+ * Return: the dest
  */
-int _strlen(char *s)
+char *_strcat(char *dest, const char *src)
 {
-	char *p = s;
+	int i;
+	int j;
 
-	while (*s)
-		s++;
-	return (s - p);
-}
+	for (i = 0; dest[i] != '\0'; i++)
+		;
 
-/**
- * _strcat - concatenates two strings
- * @dest: copy destination
- * @src: copy source
- * Return: concatenated string
- */
-char *_strcat(char *dest, char *src)
-{
-	char *ptr = dest + _strlen(dest);
+	for (j = 0; src[j] != '\0'; j++)
+	{
+		dest[i] = src[j];
+		i++;
+	}
 
-	while (*src)
-		*ptr++ = *src++;
-	*ptr = 0;
+	dest[i] = '\0';
 	return (dest);
 }
-
 /**
- * _strcmp - compares two strings
- * @s1: string 1
- * @s2: string 2
- * Return: 1 if true, 0 if false
- */
-int _strcmp(char *s1, char *s2)
-{
-	while (*s1)
-	{
-		if (*s1 != *s2)
-			break;
-		s1++;
-		s2++;
-	}
-
-	return (*(unsigned char *)s1 - *(unsigned char *)s2);
-}
-
-/**
- * _strdup - returns a pointer to a newly allocated space in memory,
- * which contains a copy of the string given as a parameter.
- * @str: string to be copied
- * Return: copied string
- */
-char *_strdup(char *str)
-{
-	int i, len;
-	char *copy;
-
-	if (!str)
-		return (NULL);
-	len = _strlen(str);
-	copy = malloc(sizeof(char) * len + 1);
-	if (!copy)
-	{
-		perror("Malloc failed\n");
-		exit(errno);
-	}
-	for (i = 0; i < len; i++)
-		copy[i] = str[i];
-	copy[i] = 0;
-	return (copy);
-}
-
-/**
- * *_strcpy - copies the string pointed to by src,
- * including the terminating null byte
- * @dest: copied string
- * @src: string to be copied
- * Return: pointer to new copied string
+ * *_strcpy - Copies the string pointed to by src.
+ * @dest: Type char pointer the dest of the copied str
+ * @src: Type char pointer the source of str
+ * Return: the dest.
  */
 char *_strcpy(char *dest, char *src)
 {
-	char *ptr = dest;
 
-	while (*src)
-		*dest++ = *src++;
-	*dest = 0;
-	return (ptr);
+	size_t a;
+
+	for (a = 0; src[a] != '\0'; a++)
+	{
+		dest[a] = src[a];
+	}
+	dest[a] = '\0';
+
+	return (dest);
+}
+/**
+ * _strcmp - Function that compares two strings.
+ * @s1: type str compared
+ * @s2: type str compared
+ * Return: Always 0.
+ */
+int _strcmp(char *s1, char *s2)
+{
+	int i;
+
+	for (i = 0; s1[i] == s2[i] && s1[i]; i++)
+		;
+
+	if (s1[i] > s2[i])
+		return (1);
+	if (s1[i] < s2[i])
+		return (-1);
+	return (0);
+}
+/**
+ * _strchr - locates a character in a string,
+ * @s: string.
+ * @c: character.
+ * Return: the pointer to the first occurrence of the character c.
+ */
+char *_strchr(char *s, char c)
+{
+	unsigned int i = 0;
+
+	for (; *(s + i) != '\0'; i++)
+		if (*(s + i) == c)
+			return (s + i);
+	if (*(s + i) == c)
+		return (s + i);
+	return ('\0');
+}
+/**
+ * _strspn - gets the length of a prefix substring.
+ * @s: initial segment.
+ * @accept: accepted bytes.
+ * Return: the number of accepted bytes.
+ */
+int _strspn(char *s, char *accept)
+{
+	int i, j, bool;
+
+	for (i = 0; *(s + i) != '\0'; i++)
+	{
+		bool = 1;
+		for (j = 0; *(accept + j) != '\0'; j++)
+		{
+			if (*(s + i) == *(accept + j))
+			{
+				bool = 0;
+				break;
+			}
+		}
+		if (bool == 1)
+			break;
+	}
+	return (i);
 }
