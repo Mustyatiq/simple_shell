@@ -1,143 +1,111 @@
 #include "main.h"
 
 /**
- * addNode - adds a new node at the beginning of a linked_l list
- * @head: reference to head of linked list
- * @str: string to be added on new node
- * Return: address of new head;
+ * add_sep_node_end - adds a separator found at the end
+ * of a sep_list.
+ * @head: head of the linked list.
+ * @sep: separator found (; | &).
+ * Return: address of the head.
  */
-linked_l *addNode(linked_l **head, char *str)
+sep_list *add_sep_node_end(sep_list **head, char sep)
 {
-	linked_l *newNode;
-	char *newStr;
+	sep_list *new, *temp;
 
-	if (!str)
+	new = malloc(sizeof(sep_list));
+	if (new == NULL)
 		return (NULL);
-	newNode = malloc(sizeof(linked_l));
-	if (!newNode)
+
+	new->separator = sep;
+	new->next = NULL;
+	temp = *head;
+
+	if (temp == NULL)
 	{
-		perror("Malloc failed\n");
-		exit(errno);
+		*head = new;
 	}
-	newStr = _strdup(str);
-	if (!newStr)
+	else
 	{
-		perror("Malloc failed\n");
-		exit(errno);
+		while (temp->next != NULL)
+			temp = temp->next;
+		temp->next = new;
 	}
-	newNode->string = newStr;
-	newNode->next = *head;
-	*head = newNode;
+
 	return (*head);
 }
 
 /**
- * addNodeEnd - adds a new node at the end of a linked_l list;
- * @head: reference to head of list
- * @str: string to be added to linked list
- * Return: address of new node
+ * free_sep_list - frees a sep_list
+ * @head: head of the linked list.
+ * Return: no return.
  */
-linked_l *addNodeEnd(linked_l **head, char *str)
+void free_sep_list(sep_list **head)
 {
-	linked_l *newNode;
-	linked_l *last = *head;
-	char *newStr;
+	sep_list *temp;
+	sep_list *curr;
 
-	if (!str)
+	if (head != NULL)
+	{
+		curr = *head;
+		while ((temp = curr) != NULL)
+		{
+			curr = curr->next;
+			free(temp);
+		}
+		*head = NULL;
+	}
+}
+
+/**
+ * add_line_node_end - adds a command line at the end
+ * of a line_list.
+ * @head: head of the linked list.
+ * @line: command line.
+ * Return: address of the head.
+ */
+line_list *add_line_node_end(line_list **head, char *line)
+{
+	line_list *new, *temp;
+
+	new = malloc(sizeof(line_list));
+	if (new == NULL)
 		return (NULL);
-	newNode = malloc(sizeof(linked_l));
-	if (!newNode)
+
+	new->line = line;
+	new->next = NULL;
+	temp = *head;
+
+	if (temp == NULL)
 	{
-		perror("Malloc failed\n");
-		exit(errno);
+		*head = new;
 	}
-	newStr = _strdup(str);
-	if (!newStr)
+	else
 	{
-		free(newNode);
-		perror("Malloc failed\n");
-		exit(errno);
+		while (temp->next != NULL)
+			temp = temp->next;
+		temp->next = new;
 	}
-	newNode->string = newStr;
-	newNode->next = NULL;
-	if (!*head)
-	{
-		*head = newNode;
-		return (newNode);
-	}
-	while (last->next)
-		last = last->next;
-	last->next = newNode;
-	return (last);
+
+	return (*head);
 }
 
 /**
- * printList - prints all elements of a linked_l list
- * @h: pointer to head of list
- * Return: number of elements
+ * free_line_list - frees a line_list
+ * @head: head of the linked list.
+ * Return: no return.
  */
-size_t printList(const linked_l *h)
+void free_line_list(line_list **head)
 {
-	register int count = 0;
+	line_list *temp;
+	line_list *curr;
 
-	while (h)
+	if (head != NULL)
 	{
-		write(STDOUT_FILENO, h->string, _strlen(h->string));
-		displayNewLine();
-		h = h->next;
-		count++;
+		curr = *head;
+		while ((temp = curr) != NULL)
+		{
+			curr = curr->next;
+			free(temp);
+		}
+		*head = NULL;
 	}
-
-	return (count);
-}
-
-/**
- * deleteNodeAtIndex - deletes the node at index
- * index of a linked_l linked list
- * @head: double pointer to head of list
- * @index: index of node to be deleted
- * Return: 1 if success, -1 if fail
- */
-int deleteNodeAtIndex(linked_l **head, unsigned int index)
-{
-	linked_l *current;
-	linked_l *next;
-
-	register uint i;
-
-	if (!head || !(*head))
-		return (-1);
-	current = *head;
-	if (!index)
-	{
-		*head = current->next;
-		free(current);
-		return (1);
-	}
-	for (i = 0; current && i < index - 1; i++)
-		current = current->next;
-	if (!current || !(current->next))
-		return (-1);
-	next = current->next->next;
-	free(current->next->string);
-	free(current->next);
-	current->next = next;
-	return (1);
-}
-
-/**
- * list_len - returns the number of elements in a linked list
- * @h: head of linked list
- * Return: number of elements in list_t
- */
-size_t list_len(linked_l *h)
-{
-	register unsigned int count = 0;
-
-	while (h)
-	{
-		h = h->next;
-		count++;
-	}
-	return (count);
 }
