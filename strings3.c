@@ -60,16 +60,3 @@ char *_itoa(int n)
 		;
 	return (buffer);
 }
-/**
- * _putsn - prints a string followed by a new line to stdout
- * @str: char type pointer
- */
-void _putsn(char *str)
-{
-	int i = 0;
-
-	for (i = 0; str[i] != '\0'; i++)
-	{
-		_putchar(str[i]);
-	}
-}
