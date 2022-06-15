@@ -1,111 +1,94 @@
 #include "main.h"
+
 /**
- * copy_info - copies value of var int var
- * @name: variable name
- * @value: variable value
- * Return: new env
+ * envFunc - prints the environment
+ * @build: input build
+ * Return: Always 1
  */
-char *copy_info(char *name, char *value)
+int envFunc(config *build)
 {
-	char *new;
-	int len_name, len_value, len;
-
-	len_name = _strlen(name);
-	len_value = _strlen(value);
-	len = len_name + len_value + 2;
-	new = malloc(sizeof(char) * len);
-	_strcpy(new, name);
-	_strcat(new, "=");
-	_strcat(new, value);
-	_strcat(new, "\0");
-
-	return (new);
+	printList(build->env);
+	return (1);
 }
-/**
- * set_env - sets or modifies an environment variable
- * @name: variable name
- * @data: struct dat
- * @value: variable value
- */
-void set_env(char *name, char *value, store *data)
-{
-	int i;
-	char *var_env, *name_env;
 
-	for (i = 0; data->_environ[i]; i++)
+/**
+ * setenvFunc - adds env variable if it does not exist;
+ * modify env variable if it does
+ * @build: input build
+ * Return: Always 1
+ */
+int setenvFunc(config *build)
+{
+	register int index, len;
+	static char buffer[BUFSIZE];
+
+	if (countArgs(build->args) != 3)
 	{
-		var_env = _strdup(data->_environ[i]);
-		name_env = _strtok(var_env, "=");
-		if (_strcmp(name_env, name) == 0)
-		{
-			free(data->_environ[i]);
-			data->_environ[i] = copy_info(name_env, value);
-			free(var_env);
-			return;
-		}
-		free(var_env);
+		errno = EWSIZE;
+		errorHandler(build);
+		return (1);
 	}
-	data->_environ = _reallocdp(data->_environ, i, sizeof(char *) * (i + 2));
-	data->_environ[i] = copy_info(name, value);
-	data->_environ[i + 1] = NULL;
+	len = _strlen(build->args[1]) + _strlen(build->args[2]) + 2;
+	_strcat(buffer, build->args[1]);
+	_strcat(buffer, "=");
+	_strcat(buffer, build->args[2]);
+	insertNullByte(buffer, len - 1);
+	index = searchNode(build->env, build->args[1]);
+	if (index == -1)
+	{
+		addNodeEnd(&build->env, buffer);
+		insertNullByte(buffer, 0);
+		return (1);
+	}
+	deleteNodeAtIndex(&build->env, index);
+	addNodeAtIndex(&build->env, index, buffer);
+	insertNullByte(buffer, 0);
+	return (1);
 }
+
 /**
- * _csetenv - checks if setenv is correctly called
- * @command: command passed
- * @data: struct store
- * Return: 1 on success
+ * unsetenvFunc - deletes env variable if exists;
+ * will only accept valid variables names
+ * @build: input build
+ * Return: Always 1
  */
-int _csetenv(char **command, store *data)
+int unsetenvFunc(config *build)
 {
-	if (command[1] == NULL || command == NULL)
-		_perror(command, -1, data);
+	register int foundVar, i = 1;
+	_Bool foundMatch = false;
+
+	while (build->args[i])
+	{
+		if (_isalpha(build->args[i][0]) || build->args[i][0] == '_')
+		{
+			foundVar = searchNode(build->env, build->args[i]);
+			if (foundVar > -1)
+			{
+				deleteNodeAtIndex(&build->env, foundVar);
+				foundMatch = true;
+			}
+		}
+		i++;
+	}
+	if (foundMatch == false)
+	{
+		errno = ENOSTRING;
+		errorHandler(build);
+	}
+	return (1);
+}
+
+/**
+ * _isalpha - checks if c is an alphabetic character
+ * @c: potential alphabetical value
+ * Return: if c is a letter, returns 1. Otherwise, return 0.
+ */
+int _isalpha(int c)
+{
+	if (c > 64 && c < 91)
+		return (1);
+	else if (c > 96 && c < 123)
+		return (1);
 	else
-		set_env(command[1], command[2], data);
-	return (1);
-}
-/**
- * _unsetenv - deletes an environment variable
- * @command: command passed
- * @data: struct store
- * Return: 1 on success
- */
-int _unsetenv(char **command, store *data)
-{
-	char **re_env;
-	char *var_env, *name_env;
-	int i, j, k;
-
-	if (command[1] == NULL)
-	{
-		_perror(command, -1, data);
-		return (1);
-	}
-	k = -5;
-	for (i = 0; data->_environ[i]; i++)
-	{
-		var_env = _strdup(data->_environ[i]);
-		name_env = _strtok(var_env, "=");
-		if (_strcmp(name_env, command[1]) == 0)
-			k = i;
-		free(var_env);
-	}
-	if (k == -5)
-	{
-		_perror(command, -1, data);
-		return (1);
-	}
-	re_env = malloc(sizeof(char *) * i);
-	for (i = j = 0; data->_environ[i]; i++)
-	{
-		if (i != k)
-		{
-			re_env[j] = data->_environ[i];
-			j++;
-		}
-	}
-	re_env[j] = NULL;
-	free(data->_environ[k]);
-	free(data->_environ);
-	data->_environ = re_env;
-	return (1);
+		return (0);
 }
