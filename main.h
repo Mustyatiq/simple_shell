@@ -36,6 +36,7 @@ typedef struct store
 void execArg(char **command, store *data);
 int _strcmp(char *s1, char *s2);
 void free_environ(store *data);
+void _putsn(char *str);
 int storeinput(char *str);
 char *_strcpy(char *dest, char *src);
 char *_itoa(int n);

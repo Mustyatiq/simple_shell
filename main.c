@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 	set_data(&data, argv[0]);
 	while (loop == 1)
 	{
-		write(STDIN_FILENO, "$ ", 2);
+		write(STDOUT_FILENO, "$ ", 2);
 		if (storeinput(inputstr) == 0)
 		{
 			if (!remove_comment(inputstr))
