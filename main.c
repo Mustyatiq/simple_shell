@@ -25,9 +25,9 @@ int main(int argc, char *argv[])
 			split_space(inputstr, command);
 			if (inputstr[0] != '\0')
 				cpathandexec(command, &data);
-			data->counter += 1;
 			else
 				continue;
+			data.counter += 1;
 		}
 		else
 			break;

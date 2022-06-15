@@ -22,6 +22,7 @@ extern char **environ;
  * struct store - contains some set data
  * @_environ: environment variables
  * @callmemaybe: argv[0]
+ * @counter: line counter
  */
 typedef struct store
 {
@@ -34,6 +35,7 @@ void execArg(char **command, store *data);
 int _strcmp(char *s1, char *s2);
 int storeinput(char *str);
 char *_strcpy(char *dest, char *src);
+char *_itoa(int n);
 void split_space(char *str, char **command);
 int _strlen(char *s);
 char *_strcat(char *dest, char *src);

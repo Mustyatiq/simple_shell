@@ -44,8 +44,9 @@ char *_strcat_cd(store *data, char **command, char *ms, char *error, char *ver)
 char *error_get_cd(char **command, store *data)
 {
 	int len, id;
-	char *error, *ver = "1", *msg;
+	char *error, *ver, *msg;
 
+	ver = _itoa(data->counter);
 	if (command[1][0] == '-')
 	{
 		msg = ": Illegal option ";
@@ -77,8 +78,9 @@ char *error_exit_shell(char **command, store *data)
 {
 	int len;
 	char *error;
-	char *ver = "1";
+	char *ver;
 
+	ver = _itoa(data->counter);
 	len = _strlen(data->callmemaybe) + _strlen(ver);
 	len += _strlen(command[0]) + _strlen(command[1]) + 23;
 	error = malloc(sizeof(char) * (len + 1));
@@ -106,8 +108,9 @@ char *error_env(char **command, store *data)
 	int len;
 	char *error;
 	char *msg;
-	char *ver = "1";
+	char *ver;
 
+	ver = _itoa(data->counter);
 	msg = ": Unable to add/remove from environment\n";
 	len = _strlen(data->callmemaybe) + _strlen(ver);
 	len += _strlen(command[0]) + _strlen(msg) + 4;
@@ -137,8 +140,9 @@ char *error_not_found(char **command, store *data)
 {
 	int len;
 	char *error;
-	char *ver = "1";
+	char *ver;
 
+	ver = _itoa(data->counter);
 	len = _strlen(data->callmemaybe) + _strlen(ver);
 	len += _strlen(command[0]) + 16;
 	error = malloc(sizeof(char) * (len + 1));
