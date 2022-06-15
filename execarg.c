@@ -37,7 +37,8 @@ void execArg(char **command, store *data)
 		if (execve(command[0], command, NULL) == -1)
 		{
 			command[0] = rpath(command[0]);
-			_perror(command, 127, data);
+			/* _perror(command, 127, data); */
+			perror(data->callmemaybe);
 		}
 		return;
 	}
