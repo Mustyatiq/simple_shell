@@ -63,9 +63,13 @@ char *error_get_cd(char **command, store *data)
 	error = malloc(sizeof(char) * (len + 1));
 
 	if (!error)
+	{
+		free(ver);
 		return (NULL);
+	}
 	error = _strcat_cd(data, command, msg, error, ver);
 
+	free(ver);
 	return (error);
 }
 /**
@@ -85,7 +89,10 @@ char *error_exit_shell(char **command, store *data)
 	len += _strlen(command[0]) + _strlen(command[1]) + 23;
 	error = malloc(sizeof(char) * (len + 1));
 	if (!error)
+	{
+		free(ver);
 		return (NULL);
+	}
 	_strcpy(error, data->callmemaybe);
 	_strcat(error, ": ");
 	_strcat(error, ver);
@@ -95,6 +102,7 @@ char *error_exit_shell(char **command, store *data)
 	_strcat(error, command[1]);
 	_strcat(error, "\n\0");
 
+	free(ver);
 	return (error);
 }
 /**
@@ -118,6 +126,7 @@ char *error_env(char **command, store *data)
 	if (!error)
 	{
 		free(error);
+		free(ver);
 		return (NULL);
 	}
 	_strcpy(error, data->callmemaybe);
@@ -128,6 +137,7 @@ char *error_env(char **command, store *data)
 	_strcat(error, msg);
 	_strcat(error, "\0");
 
+	free(ver);
 	return (error);
 }
 /**
@@ -149,6 +159,7 @@ char *error_not_found(char **command, store *data)
 	if (!error)
 	{
 		free(error);
+		free(ver);
 		return (NULL);
 	}
 	_strcpy(error, data->callmemaybe);
@@ -158,5 +169,6 @@ char *error_not_found(char **command, store *data)
 	_strcat(error, command[0]);
 	_strcat(error, ": not found\n");
 	_strcat(error, "\0");
+	free(ver);
 	return (error);
 }
