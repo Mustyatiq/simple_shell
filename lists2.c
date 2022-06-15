@@ -1,129 +1,61 @@
 #include "main.h"
 
 /**
- * searchNode - searches linked list for string and
- * returns index
- * @head: pointer to head of list
- * @str: input string
- * Return: index of node with matching string
+ * add_rvar_node - adds a variable at the end
+ * of a r_var list.
+ * @head: head of the linked list.
+ * @lvar: length of the variable.
+ * @val: value of the variable.
+ * @lval: length of the value.
+ * Return: address of the head.
  */
-int searchNode(linked_l *head, char *str)
+r_var *add_rvar_node(r_var **head, int lvar, char *val, int lval)
 {
-	register int len = 0, index = 0, i;
-	linked_l *current;
-	char *tmp, *ptr;
+	r_var *new, *temp;
 
-	current = head;
-	while (current)
-	{
-		ptr = _strchr(current->string, '=');
-		len = ptr - current->string;
-		tmp = malloc(sizeof(char) * len + 1);
-		for (i = 0; i < len; i++)
-			tmp[i] = current->string[i];
-		tmp[i] = '\0';
-		if (_strcmp(str, tmp) == 0)
-		{
-			free(tmp);
-			return (index);
-		}
-		index++;
-		current = current->next;
-		free(tmp);
-	}
-	return (-1);
-}
-
-/**
- * generateLinkedList - generates a linked list of environ
- * variables
- * @array: input array of strings
- * Return: head of linked list
- */
-linked_l *generateLinkedList(char **array)
-{
-	register int i = 0;
-	linked_l *head;
-
-	head = NULL;
-	while (array[i])
-	{
-		addNodeEnd(&head, array[i]);
-		i++;
-	}
-	return (head);
-}
-
-/**
- * addNodeAtIndex - add node at index with string
- * @head: double pointer to head
- * @index: index to add at
- * @str: string to add
- * Return: address of node added
- */
-linked_l *addNodeAtIndex(linked_l **head, int index, char *str)
-{
-	register int i = 0;
-	linked_l *newNode, *current;
-	char *newStr;
-
-	current = *head;
-	if (!str)
+	new = malloc(sizeof(r_var));
+	if (new == NULL)
 		return (NULL);
-	newNode  = malloc(sizeof(linked_l));
-	if (!newNode)
+
+	new->len_var = lvar;
+	new->val = val;
+	new->len_val = lval;
+
+	new->next = NULL;
+	temp = *head;
+
+	if (temp == NULL)
 	{
-		perror("Malloc failed\n");
-		exit(errno);
+		*head = new;
 	}
-	newStr = _strdup(str);
-	if (!newStr)
+	else
 	{
-		free(newNode);
-		perror("Malloc failed\n");
-		exit(errno);
+		while (temp->next != NULL)
+			temp = temp->next;
+		temp->next = new;
 	}
 
-	newNode->string = newStr;
-	newNode->next = NULL;
-
-	while (i < index - 1)
-	{
-		if (current->next == NULL)
-		{
-			free(newNode);
-			return (NULL);
-		}
-		current = current->next;
-		i++;
-	}
-	newNode->next = current->next;
-	current->next = newNode;
-	return (newNode);
+	return (*head);
 }
 
 /**
- * getNodeAtIndex - returns the nth node of a listint_t linked list
- * @head: pointer to head of list
- * @index: index of value to be returned
- * Return: address of node at input index
+ * free_rvar_list - frees a r_var list
+ * @head: head of the linked list.
+ * Return: no return.
  */
-char *getNodeAtIndex(linked_l *head, unsigned int index)
+void free_rvar_list(r_var **head)
 {
-	register uint count = 0;
-	linked_l *current;
-	char *ptr;
+	r_var *temp;
+	r_var *curr;
 
-	current = head;
-	while (current)
+	if (head != NULL)
 	{
-		if (count == index)
+		curr = *head;
+		while ((temp = curr) != NULL)
 		{
-			ptr = _strdup(current->string);
-			return (ptr);
+			curr = curr->next;
+			free(temp);
 		}
-		count++;
-		current = current->next;
+		*head = NULL;
 	}
-	return (NULL);
 }
