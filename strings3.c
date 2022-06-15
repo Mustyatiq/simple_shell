@@ -1,40 +1,30 @@
 #include "main.h"
 
 /**
- * insertNullByte - inserts null byte at given index
- * @str: input string
- * @index: index to insert null byte
+ * rev_string - reverses a string.
+ * @s: input string.
+ * Return: no return.
  */
-void insertNullByte(char *str, unsigned int index)
+void rev_string(char *s)
 {
-	str[index] = '\0';
-}
+	int count = 0, i, j;
+	char *str, temp;
 
-/**
- * displayPrompt - displays shell prompt
- */
-void displayPrompt(void)
-{
-	write(STDERR_FILENO, "$ ", 2);
-}
+	while (count >= 0)
+	{
+		if (s[count] == '\0')
+			break;
+		count++;
+	}
+	str = s;
 
-/**
- * displayNewLine - displays new line
- */
-void displayNewLine(void)
-{
-	write(STDOUT_FILENO, "\n", 1);
-}
-
-/**
- * sigintHandler - catches SIGINT signal and reset signal
- * @sigint: signal from stdint
- */
-void sigintHandler(int sigint)
-{
-	(void)sigint;
-	signal(SIGINT, sigintHandler);
-	displayNewLine();
-	displayPrompt();
-	fflush(stdout);
+	for (i = 0; i < (count - 1); i++)
+	{
+		for (j = i + 1; j > 0; j--)
+		{
+			temp = *(str + j);
+			*(str + j) = *(str + (j - 1));
+			*(str + (j - 1)) = temp;
+		}
+	}
 }
