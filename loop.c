@@ -1,150 +1,77 @@
 #include "main.h"
 
 /**
- * shell - simple shell
- * @build: input build
+ * without_comment - deletes comments from the input
+ *
+ * @in: input string
+ * Return: input without comments
  */
-void shell(config *build)
+char *without_comment(char *in)
 {
-	while (true)
+	int i, up_to;
+
+	up_to = 0;
+	for (i = 0; in[i]; i++)
 	{
-		checkAndGetLine(build);
-		if (splitString(build) == false)
-			continue;
-		if (findBuiltIns(build) == true)
-			continue;
-		checkPath(build);
-		forkAndExecute(build);
-	}
-}
-
-/**
- * checkAndGetLine - check stdin and retrieves next line; handles
- * prompt display
- * @build: input build
- */
-void checkAndGetLine(config *build)
-{
-	register int len;
-	size_t bufferSize = 0;
-	char *ptr, *ptr2;
-
-	build->args = NULL;
-	build->envList = NULL;
-	build->lineCounter++;
-	if (isatty(STDIN_FILENO))
-		displayPrompt();
-	len = getline(&build->buffer, &bufferSize, stdin);
-	if (len == EOF)
-	{
-		freeMembers(build);
-		if (isatty(STDIN_FILENO))
-			displayNewLine();
-		if (build->errorStatus)
-			exit(build->errorStatus);
-		exit(EXIT_SUCCESS);
-
-	}
-	ptr = _strchr(build->buffer, '\n');
-	ptr2 = _strchr(build->buffer, '\t');
-	if (ptr || ptr2)
-		insertNullByte(build->buffer, len - 1);
-	stripComments(build->buffer);
-}
-
-/**
- * stripComments - remove comments from input string
- * @str: input string
- * Return: length of remaining string
- */
-void stripComments(char *str)
-{
-	register int i = 0;
-	_Bool notFirst = false;
-
-	while (str[i])
-	{
-		if (i == 0 && str[i] == '#')
+		if (in[i] == '#')
 		{
-			insertNullByte(str, i);
-			return;
-		}
-		if (notFirst)
-		{
-			if (str[i] == '#' && str[i - 1] == ' ')
+			if (i == 0)
 			{
-				insertNullByte(str, i);
-				return;
+				free(in);
+				return (NULL);
 			}
+
+			if (in[i - 1] == ' ' || in[i - 1] == '\t' || in[i - 1] == ';')
+				up_to = i;
 		}
-		i++;
-		notFirst = true;
 	}
+
+	if (up_to != 0)
+	{
+		in = _realloc(in, i, up_to + 1);
+		in[up_to] = '\0';
+	}
+
+	return (in);
 }
 
 /**
- * forkAndExecute - fork current build and execute processes
- * @build: input build
+ * shell_loop - Loop of shell
+ * @datash: data relevant (av, input, args)
+ *
+ * Return: no return.
  */
-void forkAndExecute(config *build)
+void shell_loop(data_shell *datash)
 {
-	int status;
-	pid_t f1 = fork();
+	int loop, i_eof;
+	char *input;
 
-	convertLLtoArr(build);
-	if (f1 == -1)
+	loop = 1;
+	while (loop == 1)
 	{
-		perror("error\n");
-		freeMembers(build);
-		freeArgs(build->envList);
-		exit(1);
-	}
-	if (f1 == 0)
-	{
-		if (execve(build->fullPath, build->args, build->envList) == -1)
+		write(STDIN_FILENO, "^-^ ", 4);
+		input = read_line(&i_eof);
+		if (i_eof != -1)
 		{
-			errorHandler(build);
-			freeMembers(build);
-			freeArgs(build->envList);
-			if (errno == ENOENT)
-				exit(127);
-			if (errno == EACCES)
-				exit(126);
+			input = without_comment(input);
+			if (input == NULL)
+				continue;
+
+			if (check_syntax_error(datash, input) == 1)
+			{
+				datash->status = 2;
+				free(input);
+				continue;
+			}
+			input = rep_var(input, datash);
+			loop = split_commands(datash, input);
+			datash->counter += 1;
+			free(input);
 		}
-	} else
-	{
-		wait(&status);
-		if (WIFEXITED(status))
-			build->errorStatus = WEXITSTATUS(status);
-		freeArgsAndBuffer(build);
-		freeArgs(build->envList);
+		else
+		{
+			loop = 0;
+			free(input);
+		}
 	}
-}
-
-/**
- * convertLLtoArr - convert linked list to array
- * @build: input build
- */
-void convertLLtoArr(config *build)
-{
-	register int i = 0;
-	size_t count = 0;
-	char **envList = NULL;
-	linked_l *tmp = build->env;
-
-	count = list_len(build->env);
-	envList = malloc(sizeof(char *) * (count + 1));
-	if (!envList)
-	{
-		perror("Malloc failed\n");
-		exit(1);
-	}
-	while (tmp)
-	{
-		envList[i] = _strdup(tmp->string);
-		tmp = tmp->next;
-		i++;
-	}
-	envList[i] = NULL;
-	build->envList = envList;
 }
