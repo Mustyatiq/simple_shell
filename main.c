@@ -13,7 +13,6 @@ int main(int argc, char *argv[])
 	(void) argc;
 
 	set_data(&data, argv[0]);
-	signal(SIGINT, ctrlchandler);
 	while (loop == 1)
 	{
 		write(STDIN_FILENO, "$ ", 2);
