@@ -7,14 +7,16 @@
 void execArg(char **command, store *data)
 {
 	struct stat st;
-	pid_t pid;
+	pid_t pid, wpd;
+	int state;
+	(void)wpd;
 
 	if (stat(command[0], &st) == 0)
 	{
 		pid = fork();
-		if (pid == -1)
+		if (pid < 0)
 		{
-			perror("Error");
+			perror(data->callmemaybe);
 			return;
 		}
 		else if (pid == 0)
@@ -25,8 +27,9 @@ void execArg(char **command, store *data)
 		}
 		else
 		{
-			wait(NULL);
-			return;
+			do {
+				wpd = waitpid(pid, &state, WUNTRACED);
+			} while (!WIFEXITED(state) && !WIFSIGNALED(state));
 		}
 	}
 	else
@@ -38,7 +41,7 @@ void execArg(char **command, store *data)
 		}
 		return;
 	}
-
+	data->_return = state / 256;
 }
 /**
  * cknowncommand - checks if command is known
@@ -69,6 +72,7 @@ int cknowncommand(char **command, store *data)
 	{
 		for (i = 0; data->_environ[i]; i++)
 			_puts(data->_environ[i]);
+		data->_return = 0;
 		return (2);
 	}
 	if (check == 3)

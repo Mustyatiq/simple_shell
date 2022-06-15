@@ -43,6 +43,7 @@ void cd_dot(char **command, store *data)
 		chdir("/");
 		set_env("PWD", "/", data);
 	}
+	data->_return = 0;
 	free(cp_pwd);
 }
 /**
@@ -66,6 +67,7 @@ void cd_to(char **command, store *data)
 	cp_pwd = _strdup(pwd);
 	set_env("OLDPWD", cp_pwd, data);
 
+	data->_return = 0;
 	chdir(hold);
 	getcwd(pwd, sizeof(pwd));
 	cp_dir = _strdup(pwd);
@@ -106,6 +108,7 @@ void cd_previous(store *data)
 	if (p_oldpwd)
 		free(cp_oldpwd);
 
+	data->_return = 0;
 	chdir(p_pwd);
 }
 /**
@@ -137,4 +140,5 @@ void cd_to_home(char **command, store *data)
 	set_env("OLDPWD", p_pwd, data);
 	set_env("PWD", home, data);
 	free(p_pwd);
+	data->_return = 0;
 }

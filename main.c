@@ -32,5 +32,7 @@ int main(int argc, char *argv[])
 		else
 			break;
 	}
-	return (0);
+	if (data._return < 0)
+		return (255);
+	return (data._return);
 }

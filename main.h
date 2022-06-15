@@ -23,12 +23,14 @@ extern char **environ;
  * @_environ: environment variables
  * @callmemaybe: argv[0]
  * @counter: line counter
+ * @_return: return value
  */
 typedef struct store
 {
 	char **_environ;
 	char *callmemaybe;
 	int counter;
+	int _return;
 } store;
 
 void execArg(char **command, store *data);

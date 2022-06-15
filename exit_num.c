@@ -20,8 +20,11 @@ int exit_num(char **command, store *data)
 		{
 			_perror(command, 2, data);
 			n = 2;
+			data->_return = 2;
+			return (n);
 		}
 	}
+	data->_return = (n % 256);
 
 	return (n);
 }

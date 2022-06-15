@@ -31,5 +31,6 @@ int _perror(char **command, int value, store *data)
 		write(STDERR_FILENO, error, _strlen(error));
 		free(error);
 	}
+	data->_return = value;
 	return (value);
 }

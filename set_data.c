@@ -18,4 +18,5 @@ void set_data(store *data, char *name)
 
 	data->callmemaybe = name;
 	data->counter = 1;
+	data->_return = 0;
 }
