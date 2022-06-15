@@ -1,44 +1,25 @@
 #include "main.h"
+
 /**
- * cmp_env_name - comapres variable names
- * @nenv: variable name
- * @name: name passed
- * Return: 0 if not equal, >0 if they are
+ * _getenv - retrieves env variable that matches input string
+ * @input: input string
+ * @environ: local environmental variables
+ * Return: string of env variable
  */
-int cmp_env_name(const char *nenv, const char *name)
+char *_getenv(char *input, char **environ)
 {
-	int i;
+	register int i = 0;
+	char *tok, *right;
 
-	for (i = 0; nenv[i] != '='; i++)
+	while (environ[i])
 	{
-		if (nenv[i] != name[i])
-			return (0);
-	}
-	return (i + 1);
-}
-/**
- * _getenv - gets the value of an environment variable
- * @name: name of the variable
- * @_environ: environment value
- * Return: value of the variable if found
- * else NULL
- */
-char *_getenv(const char *name, char **_environ)
-{
-	char *ptr_env;
-	int i, mov;
-
-	ptr_env = NULL;
-	mov = 0;
-
-	for (i = 0; _environ[i]; i++)
-	{
-		mov = cmp_env_name(_environ[i], name);
-		if (mov)
+		tok = _strtok(environ[i], "=");
+		if (_strcmp(tok, input) == 0)
 		{
-			ptr_env = _environ[i];
-			break;
+			right = _strtok(NULL, "=");
+			return (right);
 		}
+		i++;
 	}
-	return (ptr_env + mov);
+	return (NULL);
 }
