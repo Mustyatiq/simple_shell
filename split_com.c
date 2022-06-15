@@ -1,79 +1,66 @@
 #include "main.h"
-/**
- * is_delim - checks if character from string is a delimiter
- * @c: character from string
- * @delim: delimiter
- * Return: 1 if it's a delimeter and 0 if not
- */
-unsigned int is_delim(char c, char *delim)
-{
-	while (*delim != '\0')
-	{
-		if (c == *delim)
-			return (1);
-		delim++;
-	}
-	return (0);
-}
-/**
- * _strtok - seperates a string using a delimiter
- * @str: string
- * @delim: delimiter
- * Return: a pointer to the seperated string
- */
-char *_strtok(char *str, char *delim)
-{
-	static char *hold;
-	char *ret;
 
-	if (!str)
-		str = hold;
-	if (!str)
-		return (NULL);
-	while (1)
+/**
+ * splitString - splits string into an array of strings
+ * separated by spaces
+ * @build: input build
+ * Return: true if able to split, false if not
+ */
+_Bool splitString(config *build)
+{
+	register unsigned int i = 0;
+	char *tok, *cpy;
+
+	if (countWords(build->buffer) == 0)
 	{
-		if (is_delim(*str, delim))
-		{
-			str++;
-			continue;
-		}
-		if (*str == '\0')
-			return (NULL);
-		break;
+		build->args = NULL;
+		free(build->buffer);
+		return (false);
 	}
-	ret = str;
-	while (1)
+	build->args = malloc((countWords(build->buffer) + 1) * sizeof(char *));
+	cpy = _strdup(build->buffer);
+	tok = _strtok(cpy, " ");
+	while (tok)
 	{
-		if (*str == '\0')
+		build->args[i] = _strdup(tok);
+		tok = _strtok(NULL, " ");
+		i++;
+	}
+	build->args[i] = NULL;
+	free(cpy);
+	return (true);
+}
+
+/**
+ * countWords - count number of words in a string
+ * @str: input string
+ * Return: number of words
+ */
+unsigned int countWords(char *str)
+{
+	register int words = 0;
+	_Bool wordOn = false;
+
+	while (*str)
+	{
+		if (isSpace(*str) && wordOn)
+			wordOn = false;
+		else if (!isSpace(*str) && !wordOn)
 		{
-			hold = str;
-			return (ret);
-		}
-		if (is_delim(*str, delim))
-		{
-			*str = '\0';
-			hold = str + 1;
-			return (ret);
+			wordOn = true;
+			words++;
 		}
 		str++;
 	}
+	return (words);
 }
+
 /**
- * split_space - splits commands from arguments
- * @str: stored string from stdin
- * @par: array  of commands
+ * isSpace - determines if char is a space
+ * @c: input char
+ * Return: true or false
  */
-void split_space(char *str, char **par)
+_Bool isSpace(char c)
 {
-	int i = 0;
-	char *piece;
-
-	piece = _strtok(str, " ");
-
-	for (i = 0; piece != NULL && i < MAXLIST; i++)
-	{
-		par[i] = piece;
-		piece = _strtok(NULL, " ");
-	}
-	par[i] = NULL;
+	return (c == ' ');
 }
