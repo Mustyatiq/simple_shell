@@ -1,38 +1,38 @@
 #include "main.h"
-/**
- * main - prints a command
- * @argc: argument  counter
- * @argv: array of arguments
- * Return: number of characters read
- */
-int main(int argc, char *argv[])
-{
-	store data;
-	char inputstr[MAXCOM], *command[MAXLIST];
-	int loop = 1;
-	(void) argc;
 
-	set_data(&data, argv[0]);
-	while (loop == 1)
-	{
-		write(STDOUT_FILENO, "#cisfun$ ", 9);
-		if (storeinput(inputstr) == 0)
-		{
-			if (!remove_comment(inputstr))
-				continue;
-			_strcpy(inputstr, remove_comment(inputstr));
-			split_space(inputstr, command);
-			if (inputstr[0] != '\0')
-				cpathandexec(command, &data);
-			else
-				continue;
-			data.counter += 1;
-		}
-		else
-			break;
-	}
-	free_environ(&data);
-	if (data._return < 0)
-		return (255);
-	return (data._return);
+/**
+ * main - entry point for application
+ * @ac: argument count
+ * @av: argument vector
+ * Return: 0 on success
+ */
+int main(int ac, char **av)
+{
+	config build;
+
+	(void)ac;
+	signal(SIGINT, sigintHandler);
+	configInit(&build);
+	build.shellName = av[0];
+	shell(&build);
+	return (0);
+}
+
+/**
+ * configInit - initialize member values for config struct
+ * @build: input build
+ * Return: build with initialized members
+ */
+config *configInit(config *build)
+{
+	build->env = generateLinkedList(environ);
+	build->envList = NULL;
+	build->args = NULL;
+	build->buffer = NULL;
+	build->path = _getenv("PATH", environ);
+	build->fullPath = NULL;
+	build->lineCounter = 0;
+	build->shellName = NULL;
+	build->errorStatus = 0;
+	return (build);
 }
