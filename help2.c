@@ -1,95 +1,40 @@
 #include "main.h"
 
 /**
- * helpAlias - instructions on how to exit
- * @build: input build
- * Return: Always 1
+ * aux_help - Help information for the builtin help.
+ * Return: no return
  */
-int helpAlias(config *build)
+void aux_help(void)
 {
-	char str[] = "alias: alias\n\tNot supported in this version.\n";
+	char *help = "help: help [-dms] [pattern ...]\n";
 
-	(void)build;
-	write(STDOUT_FILENO, str, _strlen(str));
-	return (1);
+	write(STDOUT_FILENO, help, _strlen(help));
+	help = "\tDisplay information about builtin commands.\n ";
+	write(STDOUT_FILENO, help, _strlen(help));
+	help = "Displays brief summaries of builtin commands.\n";
+	write(STDOUT_FILENO, help, _strlen(help));
 }
-
 /**
- * helpCd - instructions on how to exit
- * @build: input build
- * Return: Always 1
+ * aux_help_alias - Help information for the builtin alias.
+ * Return: no return
  */
-int helpCd(config *build)
+void aux_help_alias(void)
 {
-	char str[192] = "cd: cd [destination]\n\t";
-	char *str2 = "Change directory to target destination.\n\t";
-	char *str3 = "If [destination] is ommitted, user will taken to home.\n\t";
-	char *str4 = "If \"-\" is used as second argument, user will be taken to ";
-	char *str5 = "last directory.\n";
+	char *help = "alias: alias [-p] [name[=value]...]\n";
 
-	(void)build;
-	_strcat(str, str2);
-	_strcat(str, str3);
-	_strcat(str, str4);
-	_strcat(str, str5);
-	write(STDOUT_FILENO, str, _strlen(str));
-	return (1);
+	write(STDOUT_FILENO, help, _strlen(help));
+	help = "\tDefine or display aliases.\n ";
+	write(STDOUT_FILENO, help, _strlen(help));
 }
-
 /**
- * helpSetenv - instructions on how to exit
- * @build: input build
- * Return: Always 1
+ * aux_help_cd - Help information for the builtin alias.
+ * Return: no return
  */
-int helpSetenv(config *build)
+void aux_help_cd(void)
 {
-	char str[186] = "setenv: setenv [var] [value]\n\t";
-	char *str2 = "Set or update a variable in the environment.\n\n\t";
-	char *str3 = "Creates a variable [var] with [value]. ";
-	char *str4 = "If the [var] already exists in the environment, ";
-	char *str5 = "the value is updated.\n";
+	char *help = "cd: cd [-L|[-P [-e]] [-@]] [dir]\n";
 
-	(void)build;
-	_strcat(str, str2);
-	_strcat(str, str3);
-	_strcat(str, str4);
-	_strcat(str, str5);
-	write(STDOUT_FILENO, str, _strlen(str));
-	return (1);
-}
-
-/**
- * helpUnsetenv - instructions on how to exit
- * @build: input build
- * Return: Always 1
- */
-int helpUnsetenv(config *build)
-{
-	char str[116] = "unsetenv: unsetenv [var]\n\t";
-	char *str2 = "Unset a variable in the environment.\n\n\t";
-	char *str3 = "[var] is an existing variable in the environment.\n";
-
-	(void)build;
-	_strcat(str, str2);
-	_strcat(str, str3);
-	write(STDOUT_FILENO, str, _strlen(str));
-	return (1);
-}
-
-/**
- * helpHelp - instructions on how to exit
- * @build: input build
- * Return: Always 1
- */
-int helpHelp(config *build)
-{
-	char str[129] = "help: help [built-in]\n\t";
-	char *str2 = "Display information about built-in commands.\n\n\t";
-	char *str3 = "If [built-in] is not specified, print a list of built-ins.\n";
-
-	(void)build;
-	_strcat(str, str2);
-	_strcat(str, str3);
-	write(STDOUT_FILENO, str, _strlen(str));
-	return (1);
+	write(STDOUT_FILENO, help, _strlen(help));
+	help = "\tChange the shell working directory.\n ";
+	write(STDOUT_FILENO, help, _strlen(help));
 }
