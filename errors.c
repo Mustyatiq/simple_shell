@@ -1,174 +1,113 @@
 #include "main.h"
-/**
- * _strcat_cd - strcat for cd error
- * @data: data struct
- * @command: command passed
- * @ms: message to print
- * @error: error message
- * @ver: counter lines
- * Return: error message
- */
-char *_strcat_cd(store *data, char **command, char *ms, char *error, char *ver)
-{
-	char *flag;
 
-	_strcpy(error, data->callmemaybe);
+/**
+ * errorHandler - prints error message for shell
+ * @build: the build config
+ */
+void errorHandler(config *build)
+{
+	register int len;
+	static char error[BUFSIZE];
+	char *ptr, *alpha;
+
+	alpha = itoa(build->lineCounter);
+	_strcat(error, build->shellName);
 	_strcat(error, ": ");
-	_strcat(error, ver);
+	_strcat(error, alpha);
 	_strcat(error, ": ");
-	_strcat(error, command[0]);
-	_strcat(error, ms);
-	if (command[1][0] == '-')
+	_strcat(error, build->args[0]);
+	_strcat(error, getErrorMessage());
+	if (build->args[1])
 	{
-		flag = malloc(sizeof(char) * 3);
-		flag[0] = '-';
-		flag[1] = command[1][1];
-		flag[2] = '\0';
-		_strcat(error, flag);
-		free(flag);
-	}
-	else
-	{
-		_strcat(error, command[1]);
+		if (errno != EBADCD)
+			_strcat(error, ": ");
+		_strcat(error, build->args[1]);
 	}
 	_strcat(error, "\n");
-	_strcat(error, "\0");
-	return (error);
+	ptr = _strchr(error, '\n');
+	len = ptr - error;
+	write(STDERR_FILENO, error, len + 1);
+	free(alpha);
+	insertNullByte(error, 0);
 }
+
 /**
- * error_get_cd - error mesage for cd
- * @command: command passed
- * @data: struct store
- * Return: message
+ * getErrorMessage - matches errno to corresponding string
+ * Return: string of error message
  */
-char *error_get_cd(char **command, store *data)
+char *getErrorMessage(void)
 {
-	int len, id;
-	char *error, *ver, *msg;
+	char *str;
 
-	ver = _itoa(data->counter);
-	if (command[1][0] == '-')
+	switch (errno)
 	{
-		msg = ": Illegal option ";
-		id = 2;
+		case EBADCD:
+			str = ": can't cd to ";
+			break;
+		case ENOENT:
+			str = ": not found";
+			break;
+		case ENOSTRING:
+			str = ": bad variable name";
+			break;
+		case EILLEGAL:
+			str = ": Illegal number";
+			break;
+		case EWSIZE:
+			str = ": invalid number of arguments";
+			break;
+		case ENOBUILTIN:
+			str = ": type help for a list of built-ins";
+			break;
+		case EACCES:
+			str = ": Permission denied";
+			break;
+		default:
+			str = ": no error number assigned";
 	}
-	else
-	{
-		msg = ": can't cd to ";
-		id = _strlen(command[1]);
-	}
-
-	len = _strlen(data->callmemaybe) + _strlen(command[0]);
-	len += _strlen(ver) + _strlen(msg) + id + 5;
-	error = malloc(sizeof(char) * (len + 1));
-
-	if (!error)
-	{
-		free(ver);
-		return (NULL);
-	}
-	error = _strcat_cd(data, command, msg, error, ver);
-
-	free(ver);
-	return (error);
+	return (str);
 }
+
 /**
- * error_exit_shell - error message for exit
- * @data: data struct
- * @command: command passed
- * Return: error message
+ * countDigits - count number of digits in a number
+ * @num: input number
+ * Return: number of digits
  */
-char *error_exit_shell(char **command, store *data)
+unsigned int countDigits(int num)
 {
-	int len;
-	char *error;
-	char *ver;
+	register int digits = 0;
 
-	ver = _itoa(data->counter);
-	len = _strlen(data->callmemaybe) + _strlen(ver);
-	len += _strlen(command[0]) + _strlen(command[1]) + 23;
-	error = malloc(sizeof(char) * (len + 1));
-	if (!error)
+	while (num > 0)
 	{
-		free(ver);
-		return (NULL);
+		digits++;
+		num /= 10;
 	}
-	_strcpy(error, data->callmemaybe);
-	_strcat(error, ": ");
-	_strcat(error, ver);
-	_strcat(error, ": ");
-	_strcat(error, command[0]);
-	_strcat(error, ": Illegal number: ");
-	_strcat(error, command[1]);
-	_strcat(error, "\n\0");
-
-	free(ver);
-	return (error);
+	return (digits);
 }
+
 /**
- * error_env - error message for env
- * @command: commad passed
- * @data: data sstruct
- * Return: error message
+ * itoa - converts integer to string
+ * @num: input integer
+ * Return: string type of number
  */
-char *error_env(char **command, store *data)
+char *itoa(unsigned int num)
 {
-	int len;
-	char *error;
-	char *msg;
-	char *ver;
+	register int digits = 0;
+	char *str;
 
-	ver = _itoa(data->counter);
-	msg = ": Unable to add/remove from environment\n";
-	len = _strlen(data->callmemaybe) + _strlen(ver);
-	len += _strlen(command[0]) + _strlen(msg) + 4;
-	error = malloc(sizeof(char) * (len + 1));
-	if (!error)
+	digits += countDigits(num);
+	str = malloc(sizeof(char) * (digits + 1));
+	if (!str)
 	{
-		free(error);
-		free(ver);
-		return (NULL);
+		perror("Malloc: failed\n");
+		exit(errno);
 	}
-	_strcpy(error, data->callmemaybe);
-	_strcat(error, ": ");
-	_strcat(error, ver);
-	_strcat(error, ": ");
-	_strcat(error, command[0]);
-	_strcat(error, msg);
-	_strcat(error, "\0");
-
-	free(ver);
-	return (error);
-}
-/**
- * error_not_found - error message when command is not found
- * @command: command passed
- * @data: struct data
- * Return: error message
- */
-char *error_not_found(char **command, store *data)
-{
-	int len;
-	char *error;
-	char *ver;
-
-	ver = _itoa(data->counter);
-	len = _strlen(data->callmemaybe) + _strlen(ver);
-	len += _strlen(command[0]) + 16;
-	error = malloc(sizeof(char) * (len + 1));
-	if (!error)
+	insertNullByte(str, digits);
+	while (num > 0)
 	{
-		free(error);
-		free(ver);
-		return (NULL);
+		str[digits - 1] = num % 10 + '0';
+		num = num / 10;
+		digits--;
 	}
-	_strcpy(error, data->callmemaybe);
-	_strcat(error, ": ");
-	_strcat(error, ver);
-	_strcat(error, ": ");
-	_strcat(error, command[0]);
-	_strcat(error, ": not found\n");
-	_strcat(error, "\0");
-	free(ver);
-	return (error);
+	return (str);
 }
